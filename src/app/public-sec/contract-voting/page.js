@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import MilestoneTracker from "@/Components/People/voting";
 import ProtectedRoute from "@/Components/ProtectedRoutes/protected-routes";
-
-const AdminPaymentPage = () => {
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="text-white p-4">Loading...</div>}>
+      <AdminPaymentPage />
+    </Suspense>
+  );
+}
+export const AdminPaymentPage = () => {
   const searchParams = useSearchParams();
   const contractParam = searchParams.get("contract");
   const contractData = contractParam
@@ -340,4 +346,4 @@ const AdminPaymentPage = () => {
   );
 };
 
-export default AdminPaymentPage;
+
