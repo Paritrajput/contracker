@@ -77,7 +77,8 @@ const AdminPaymentPage = (contract) => {
         <p className="text-center text-gray-400">Loading payments...</p>
       ) : error ? (
         <p className="text-center text-red-500">{error}</p>
-      ) : requestedPayments.length > 0 ? (
+      ) : requestedPayments.filter((payment) => payment.status === "Pending")
+          .length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {requestedPayments
             .filter((payment) => payment.status === "Pending")
@@ -96,6 +97,10 @@ const AdminPaymentPage = (contract) => {
                   Payment Requested: ₹{payment.paymentMade}
                 </p>
                 <p className="text-gray-400">Reason: {payment.reason}</p>
+                <p className="text-gray-400">
+                  Votes- Approvals: {payment.approvalVotes?.length} ,
+                  Rejections:{payment.rejectionVotes?.length}
+                </p>
                 <p className="text-yellow-400">Status: {payment.status}</p>
 
                 <div className="flex justify-between mt-4">

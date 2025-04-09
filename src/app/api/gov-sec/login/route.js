@@ -15,8 +15,7 @@ export async function POST(req) {
 
     console.log(user);
     let isOwner = false;
-    let isSuperOwner=false;
-
+    let isSuperOwner = false;
 
     // if (!user) {
     //   user = await Government.findOne({ email });
@@ -43,9 +42,16 @@ export async function POST(req) {
     }
 
     const token = jwt.sign(
-      { id: user._id, owner: isOwner, superOwner: isSuperOwner },
+      {
+        id: user._id,
+        owner: isOwner,
+        superOwner: isSuperOwner,
+        role: "gov",
+        name: user.name,
+        email: user.email,
+      },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "2d" }
     );
 
     return NextResponse.json({ success: true, token });

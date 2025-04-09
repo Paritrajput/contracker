@@ -2,30 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import GovProfile from "@/Components/UserProfile/gov-profile";
-import { GovProvider } from "@/Context/govUser";
-import axios from "axios";
+import { GovProvider, useGovUser } from "@/Context/govUser";
+
 
 export default function ContractorLayout({ children }) {
-  const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("gov-token");
-    if (!token) {
-      router.push("/authenticate/gov-auth/login"); // Redirect to login if no token
-    } else {
-      console.log(token);
-      setIsAuthenticated(true);
-    }
-  }, []);
-
-  if (!isAuthenticated) return null;
-
+    const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { user } = useGovUser();
+  
+    useEffect(() => {
+      if (user) {
+        console.log(user);
+        if (user.role == "gov") {
+          setIsAuthenticated(true);
+        }
+      } else {
+        router.push("/authenticate/gov-auth/login");
+      }
+    }, []);
+  
+    if (!isAuthenticated) return null;
   return (
     <GovProvider>
       {children}
-      <GovProfile />
     </GovProvider>
   );
 }

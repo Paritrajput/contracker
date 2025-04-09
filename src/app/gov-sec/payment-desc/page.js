@@ -1,13 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Page1 from "@/Components/Gov/Payment/page1";
 import Page2 from "@/Components/Gov/Payment/page2";
-import UserProfile from "@/Components/UserProfile/public-profile";
-import { useGovUser } from "@/Context/govUser";
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
 
-const ContractBottom = () => {
+import { useRouter, useSearchParams } from "next/navigation";
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="text-white p-4">Loading...</div>}>
+      <ContractBottom />
+    </Suspense>
+  );
+}
+
+export const ContractBottom = () => {
   const [activeTab, setActiveTab] = useState("Active Payments");
   const router = useRouter();
 
@@ -48,4 +53,4 @@ const ContractBottom = () => {
   );
 };
 
-export default ContractBottom;
+// export default ContractBottom;

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { dbConnect } from "@/lib/dbConnect"; // Ensure you have a database connection file
-import Issue from "@/Models/Issue"; // Import the Issue model
+import { dbConnect } from "@/lib/dbConnect"; 
+import Issue from "@/Models/Issue"; 
 
-// GET: Fetch a specific issue by ID
+
 export async function GET(req, { params }) {
   try {
-    await dbConnect(); // Ensure DB is connected
+    await dbConnect(); 
 
-    const { id } = await params; // Extract issue ID from URL params
+    const { id } = await params;
     const issue = await Issue.findById(id);
 
     if (!issue) {
@@ -26,9 +26,9 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
   try {
-    await dbConnect(); // Ensure DB is connected
+    await dbConnect(); 
 
-    const { id } = params; // Extract issue ID from URL params
+    const { id } = params; 
     const issue = await Issue.findById(id);
 
     if (!issue) {

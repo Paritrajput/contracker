@@ -13,6 +13,7 @@ export default function ContractDesc() {
   const [selectedOption, setSelectedOption] = useState("");
   const [otherText, setOtherText] = useState(null);
   const [requestedPayments, setRequestedPayments] = useState([]);
+  const [progress, setProgress] = useState("");
   const [pendingPayment, setPendingPayment] = useState({
     contractorId: "",
     contractId: "",
@@ -21,10 +22,16 @@ export default function ContractDesc() {
     reason: "",
     paymentMade: "",
     status: "",
+    progress: "",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (paymentMade > contractData.bidAmount - contractData.paidAmound) {
+      alert("YOur Requested Amount Is More Than Limit ");
+      return;
+    }
 
     const updatedPayment = {
       contractorId: contractData.contractorMongoId,
@@ -32,6 +39,7 @@ export default function ContractDesc() {
       contractId: contractData.mongoContractId,
       bidAmount: contractData.contractAmount,
       reason: otherText ? otherText : selectedOption,
+      progress: progress,
       paymentMade: paymentMade,
       status: "Pending",
     };
@@ -56,9 +64,11 @@ export default function ContractDesc() {
           bidAmount: "",
           amountUsed: "",
           reason: "",
+          progress: "",
           paymentMade: "",
           status: "",
         });
+        getPayments();
       } else {
         alert("Error: " + data.message);
       }
@@ -129,11 +139,22 @@ export default function ContractDesc() {
             <input
               type="text"
               placeholder="Enter Material"
-              value={otherText}
+              value={otherText || ""}
               onChange={(e) => setOtherText(e.target.value)}
               className="w-full mt-2 p-2 border border-gray-600 bg-black rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           )}
+        </div>
+        <div className="mt-6">
+          <label className="block text-gray-300 font-semibold mb-1">
+            Work Progress:
+          </label>
+          <input
+            type="text"
+            value={progress}
+            onChange={(e) => setProgress(e.target.value)}
+            className="w-full p-2 border border-gray-600 bg-black rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
         </div>
 
         <div className="mt-6">
@@ -158,32 +179,35 @@ export default function ContractDesc() {
         <h2 className="text-2xl font-bold text-teal-400 mt-8 text-center">
           Pending Payment Approvals
         </h2>
-        {requestedPayments.length>0 && requestedPayments.map((payment, index) => (
-          <div
-            key={index}
-            className="bg-[#222] p-4 mt-4 rounded-lg shadow-md border border-gray-700"
-          >
-            <InfoRow label="Bid Amount" value={`₹${payment.bidAmount}`} />
-            <InfoRow
-              label="Requested Amount"
-              value={`₹${payment.paymentMade}`}
-            />
-            <InfoRow
-              label="Remaining Amount"
-              value={`₹${payment.bidAmount - payment.paymentMade}`}
-            />
-            <InfoRow
-              label="Status"
-              value={
-                payment.status == "Approve" ? (
-                  <span className="text-green-400 font-semibold">Approved</span>
-                ) : (
-                  <span className="text-red-400 font-semibold">Pending</span>
-                )
-              }
-            />
-          </div>
-        ))}
+        {requestedPayments.length > 0 &&
+          requestedPayments.map((payment, index) => (
+            <div
+              key={index}
+              className="bg-[#222] p-4 mt-4 rounded-lg shadow-md border border-gray-700"
+            >
+              <InfoRow label="Bid Amount" value={`₹${payment.bidAmount}`} />
+              <InfoRow
+                label="Requested Amount"
+                value={`₹${payment.paymentMade}`}
+              />
+              <InfoRow
+                label="Remaining Amount"
+                value={`₹${payment.bidAmount - payment.paymentMade}`}
+              />
+              <InfoRow
+                label="Status"
+                value={
+                  payment.status == "Approve" ? (
+                    <span className="text-green-400 font-semibold">
+                      Approved
+                    </span>
+                  ) : (
+                    <span className="text-red-400 font-semibold">Pending</span>
+                  )
+                }
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

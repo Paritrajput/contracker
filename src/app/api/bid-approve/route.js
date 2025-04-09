@@ -11,8 +11,7 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     await dbConnect();
- 
-  
+
     const expiredTenders = await Tender.find({
       bidClosingDate: { $lte: new Date() },
       active: true,
@@ -26,12 +25,11 @@ export async function POST(req) {
     }
 
     for (const tender of expiredTenders) {
-      const { _id: tenderId, blockchainTenderId, title } = tender;
+      const { _id: tenderId, blockchainTenderId, title, issueDetails } = tender;
       const bids = await Bid.find({ tenderId });
 
       if (bids.length === 0) continue;
 
-      // Fetch contractor details
       const enrichedBids = await Promise.all(
         bids.map(async (bid) => {
           const contractor = await Contractor.findById(bid.contractorId);
@@ -63,6 +61,7 @@ export async function POST(req) {
         bidAmount,
         contractorEmail,
         contractorName,
+        milestones,
       } = winningBid;
 
       // Reject other bids
@@ -75,24 +74,24 @@ export async function POST(req) {
       });
 
       // Define contract milestones
-      const milestones = [
-        {
-          description: "Initial Planning & Documentation",
-          amount: bidAmount * 0.2, // 20% payment
-          dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-        },
-        {
-          description: "50% Project Completion",
-          amount: bidAmount * 0.3, // 30% payment
-          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        },
-        {
-          description: "Final Project Completion & Approval",
-          amount: bidAmount * 0.5, // 50% payment
-          dueDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-        },
-      ];
-
+      // const milestones = [
+      //   {
+      //     description: "Initial Planning & Documentation",
+      //     amount: bidAmount * 0.2, // 20% payment
+      //     dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+      //   },
+      //   {
+      //     description: "50% Project Completion",
+      //     amount: bidAmount * 0.3, // 30% payment
+      //     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      //   },
+      //   {
+      //     description: "Final Project Completion & Approval",
+      //     amount: bidAmount * 0.5, // 50% payment
+      //     dueDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+      //   },
+      // ];
+      console.log(issueDetails.location);
       // Create and save contract
       const newContract = new Contract({
         contractId: `CON-${Date.now()}`,
@@ -100,7 +99,8 @@ export async function POST(req) {
         winner: contractorId,
         bidAmount,
         paidAmount: 0,
-        milestones,
+        milestones: milestones,
+        location: issueDetails.location,
         createdAt: new Date(),
         blockchainContractId: null,
       });

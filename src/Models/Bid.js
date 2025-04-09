@@ -1,5 +1,16 @@
 import mongoose from "mongoose";
-
+const MilestoneSchema = new mongoose.Schema({
+  description: String,
+  amount: Number,
+  dueDate: Date,
+  status: {
+    type: String,
+    enum: ["Pending", "Completed", "Rejected"],
+    default: "Pending",
+  },
+  approvalVotes: { type: Number, default: 0 },
+  rejectionVotes: { type: Number, default: 0 },
+});
 const BidSchema = new mongoose.Schema({
   tenderId: { type: String, required: true },
   contractorId: { type: String, required: true },
@@ -13,6 +24,7 @@ const BidSchema = new mongoose.Schema({
   experienceYears: Number,
   contractorRating: Number,
   blockchainBidId: String,
+  milestones: [MilestoneSchema],
   transactionHash: { type: String },
   timestamp: { type: Date, default: Date.now },
 });

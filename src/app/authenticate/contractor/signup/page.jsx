@@ -33,7 +33,7 @@ export default function ContractorSignup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black text-white">
+    <div className="flex items-center justify-center min-h-screen bg-[#060611] text-white">
       <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-teal-400 text-center">Contractor Signup</h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}

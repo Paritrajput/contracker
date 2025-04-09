@@ -20,7 +20,7 @@ export default function ContractorLogin() {
     try {
       const res = await axios.post("/api/gov-sec/owner-login", formData);
       if (res.data.success) {
-        localStorage.setItem("gov-token", res.data.token);
+        localStorage.setItem("token", res.data.token);
 
         router.push("/gov-sec");
       }
@@ -30,7 +30,7 @@ export default function ContractorLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black text-white">
+    <div className="flex items-center justify-center min-h-screen bg-[#060611] text-white">
       <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-teal-400 text-center">Owner Login</h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}

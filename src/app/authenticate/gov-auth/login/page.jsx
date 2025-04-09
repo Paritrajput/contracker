@@ -20,7 +20,7 @@ export default function ContractorLogin() {
     try {
       const res = await axios.post("/api/gov-sec/login", formData);
       if (res.data.success) {
-        localStorage.setItem("gov-token", res.data.token);
+        localStorage.setItem("token", res.data.token);
 
         router.push("/gov-sec");
       }
@@ -30,9 +30,11 @@ export default function ContractorLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black text-white">
+    <div className="flex items-center justify-center min-h-screen bg-[#060611] text-white">
       <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-teal-400 text-center">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-teal-400 text-center">
+          Admin Login
+        </h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="mt-4">
           <input
@@ -56,11 +58,20 @@ export default function ContractorLogin() {
           </button>
         </form>
         <p className="text-gray-400 text-sm text-center mt-3">
-          Don't have an account? <a href="/authenticate/gov-auth/signup" className="text-teal-400">Sign up</a>
+          Don't have an account?{" "}
+          <a href="/authenticate/gov-auth/signup" className="text-teal-400">
+            Sign up
+          </a>
         </p>
 
         <p className="text-gray-400 text-sm text-center mt-3">
-          Are you a owner? <a href="/authenticate/gov-auth/owner-login" className="text-teal-400">Owner Login</a>
+          Are you a owner?{" "}
+          <a
+            href="/authenticate/gov-auth/owner-login"
+            className="text-teal-400"
+          >
+            Owner Login
+          </a>
         </p>
       </div>
     </div>

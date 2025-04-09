@@ -3,9 +3,15 @@
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-
-const BidAuth = () => {
+import React, { Suspense, useEffect, useState } from "react";
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="text-white p-4">Loading...</div>}>
+      <BidAuth />
+    </Suspense>
+  );
+}
+export const BidAuth = () => {
   const [selectedBidder, setSelectedBidder] = useState(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,7 +99,7 @@ const BidAuth = () => {
     }
   };
   return (
-    <div className="p-6 bg-gray-900 min-h-screen text-white">
+    <div className="p-6 bg-[#060611] min-h-screen text-white">
       {tenders.status === "Active" ? (
         <div className="my-5  text-teal-500 py-2 text-2xl font-semibold justify-self-center">
           Bidding Process Ongoing
@@ -150,4 +156,4 @@ const BidAuth = () => {
   );
 };
 
-export default BidAuth;
+// export default BidAuth;

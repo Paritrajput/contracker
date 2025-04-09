@@ -8,7 +8,9 @@ const BidForm = () => {
   const [bidAmount, setBidAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [proposalDocument, setProposalDocument] = useState("");
-  const [milestones, setMilestones] = useState([{ description: "", amount: "", dueDate: "" }]);
+  const [milestones, setMilestones] = useState([
+    { description: "", amount: "", dueDate: "" },
+  ]);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,7 +47,6 @@ const BidForm = () => {
           contractorId,
           bidAmount,
           proposalDocument,
-          milestones, // Send milestones to backend
         }),
       });
 
@@ -63,23 +64,23 @@ const BidForm = () => {
     }
   };
 
-  // Handle milestone input changes
-  const handleMilestoneChange = (index, field, value) => {
-    const newMilestones = [...milestones];
-    newMilestones[index][field] = value;
-    setMilestones(newMilestones);
-  };
+  // // Handle milestone input changes
+  // const handleMilestoneChange = (index, field, value) => {
+  //   const newMilestones = [...milestones];
+  //   newMilestones[index][field] = value;
+  //   setMilestones(newMilestones);
+  // };
 
-  // Add a new milestone
-  const addMilestone = () => {
-    setMilestones([...milestones, { description: "", amount: "", dueDate: "" }]);
-  };
+  // // Add a new milestone
+  // const addMilestone = () => {
+  //   setMilestones([...milestones, { description: "", amount: "", dueDate: "" }]);
+  // };
 
-  // Remove a milestone
-  const removeMilestone = (index) => {
-    const newMilestones = milestones.filter((_, i) => i !== index);
-    setMilestones(newMilestones);
-  };
+  // // Remove a milestone
+  // const removeMilestone = (index) => {
+  //   const newMilestones = milestones.filter((_, i) => i !== index);
+  //   setMilestones(newMilestones);
+  // };
 
   return (
     <div className="flex justify-center my-9 items-center">
@@ -106,7 +107,7 @@ const BidForm = () => {
             required
           />
 
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <h3 className="text-lg font-bold">Milestones</h3>
             {milestones.map((milestone, index) => (
               <div key={index} className="mb-4 border-b pb-2">
@@ -158,7 +159,7 @@ const BidForm = () => {
             >
               Add Milestone
             </button>
-          </div>
+          </div> */}
 
           <button
             type="submit"

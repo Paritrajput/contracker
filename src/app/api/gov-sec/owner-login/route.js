@@ -42,7 +42,14 @@ export async function POST(req) {
     }
 
     const token = jwt.sign(
-      { id: user._id, owner: isOwner, superOwner: isSuperOwner },
+      {
+        id: user._id,
+        owner: isOwner,
+        superOwner: isSuperOwner,
+        role: "gov",
+        name: user.name,
+        email: user.email,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );

@@ -12,6 +12,7 @@ const PeopleVote = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [eligible, setEligible] = useState(null);
   const [issueLocation, setIssueLocation] = useState(null);
+  const [loading, setLoading] = useState(true); // 🔄
 
   // Fetch issue details
   useEffect(() => {
@@ -22,10 +23,12 @@ const PeopleVote = () => {
         setIssueLocation(response.data.location);
       } catch {
         console.log("Failed to fetch issue");
+      } finally {
+        setLoading(false); // ⛔ loading done
       }
     };
     if (id) getIssue();
-  }, [id]); // ✅ Depend on 'id'
+  }, [id]);
 
   // Get user's geolocation
   useEffect(() => {
@@ -52,7 +55,6 @@ const PeopleVote = () => {
     }
   }, [userLocation, issueLocation]);
 
-  // Function to call Next.js API
   const checkEligibility = async (lat, lon) => {
     try {
       const response = await fetch("/api/check-eligibility", {
@@ -81,29 +83,58 @@ const PeopleVote = () => {
     }
 
     try {
+      setIsVoting(true);
       const response = await fetch("/api/public-issue/vote", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ issueId: issue2._id, vote: vote }),
+        body: JSON.stringify({ issueId: issue2._id, vote }),
       });
       alert("Voted Successfully");
-      console.log(response);
+      setIsVoting(false);
     } catch {
-      console.log("Failed to fetch issue");
+      console.log("Failed to vote");
+      setIsVoting(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-black p-6">
+        <div className="bg-gray-900 shadow-lg border border-gray-700 rounded-lg p-6 w-full max-w-lg text-white animate-pulse">
+          <div className="h-6 bg-gray-700 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+          <div className="h-4 bg-gray-700 rounded w-5/6 mb-4"></div>
+          <div className="h-48 bg-gray-800 rounded mb-6"></div>
+          <div className="flex gap-4">
+            <div className="h-10 w-24 bg-gray-700 rounded"></div>
+            <div className="h-10 w-24 bg-gray-700 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!issue2)
-    return <p className="text-center text-white">Loading issue details...</p>;
+    return <p className="text-center text-white">Issue not found.</p>;
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-black p-6">
-      <div className="bg-gray-900 shadow-lg border border-gray-700 rounded-lg p-6 w-full max-w-lg text-white">
+    <div className=" min-h-screen bg-[#060611] p-6">
+      <h1 className="text-3xl font-extrabold justify-self-center my-5 text-teal-400">Vote Issue</h1>
+      <div className="bg-gray-900 shadow-lg border border-gray-700 rounded-lg p-6 w-full max-w-lg text-white justify-self-center">
         <h2 className="text-2xl font-bold text-teal-400">
           {issue2.issue_type}
         </h2>
         <p className="text-gray-300 mt-2">{issue2.description}</p>
-        {issue2.image && <img src={issue2.image} alt="Issue Image" />}
+        <h2 className="text-gray-300 mt-2">
+          {issue2.placename}
+        </h2>
+        {issue2.image && (
+          <img
+            src={issue2.image}
+            alt="Issue Image"
+            className="mt-4 rounded-lg border border-gray-700"
+          />
+        )}
 
         {!isVoting ? (
           <div className="mt-6 flex gap-4 justify-center">

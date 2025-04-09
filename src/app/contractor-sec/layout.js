@@ -3,23 +3,30 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ContractorProfile from "@/Components/UserProfile/contractor-profile";
+import { useGovUser } from "@/Context/govUser";
 
 export default function ContractorLayout({ children }) {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { user } = useGovUser();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/authenticate/contractor/login"); // Redirect to login if no token
+    if (user) {
+      console.log(user);
+      if (user.role !== "contractor") {
+        setIsAuthenticated(false)
+        router.push("/authenticate/contractor/login");
+      }
+      else{
+        setIsAuthenticated(true)
+      }
     } else {
-      console.log(token)
-      setIsAuthenticated(true);
+      setIsAuthenticated(false)
+      router.push("/authenticate/contractor/login");
     }
   }, []);
 
-  if (!isAuthenticated) return null; // Prevent rendering content until auth check is done
+  if (!isAuthenticated) return null;
 
-  return <>{children}
-  <ContractorProfile/></>;
+  return <>{children}</>;
 }

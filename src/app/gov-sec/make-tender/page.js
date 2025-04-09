@@ -1,19 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { ethers } from "ethers";
 import axios from "axios";
 
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="text-white p-4">Loading...</div>}>
+      <MakeTender />
+    </Suspense>
+  );
+}
 
-const MakeTender = () => {
+export const MakeTender = () => {
   const searchParams = useSearchParams();
   const issueParam = searchParams.get("issue");
   const parsedIssue = issueParam
     ? JSON.parse(decodeURIComponent(issueParam))
     : null;
 
-    console.log(parsedIssue)
+  console.log(parsedIssue);
 
   const [creator, setCreator] = useState(null);
 
@@ -34,7 +40,7 @@ const MakeTender = () => {
     maxBidAmount: "",
     bidOpeningDate: "",
     bidClosingDate: "",
-    location:""
+    location: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -50,16 +56,11 @@ const MakeTender = () => {
         })
         .then((res) => setCreator(res.data))
         .catch(() => localStorage.removeItem("gov-token"));
-       
     }
   }, []);
-   console.log(creator)
+  console.log(creator);
 
-
-  
   const submitTender = async () => {
- 
-
     setLoading(true);
     setError(null);
     setSuccess(null);
@@ -78,8 +79,6 @@ const MakeTender = () => {
       const mongoData = await mongoResponse.json();
       if (!mongoResponse.ok)
         throw new Error(mongoData.error || "Failed to store in MongoDB");
-
-     
 
       setSuccess("Tender successfully created on MongoDB and Blockchain!");
       setFormData({
@@ -101,7 +100,7 @@ const MakeTender = () => {
 
   if (!parsedIssue) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black text-white">
+      <div className="flex items-center justify-center min-h-screen bg-[#060611] text-white">
         <p className="text-red-500 text-lg">Error: Issue details not found.</p>
       </div>
     );
@@ -113,7 +112,6 @@ const MakeTender = () => {
       [name]: value,
     }));
   };
-  
 
   return (
     <div className="flex flex-col items-center bg-black text-white p-6 min-h-screen">
@@ -141,122 +139,120 @@ const MakeTender = () => {
         </p>
       </div>
 
-     
       <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-lg mt-6">
         <h2 className="text-2xl font-bold text-teal-400">
           Enter Tender Details
         </h2>
 
-      
-
         <div className="grid gap-4">
           <div className="mt-2">
-          <label className="block font-semibold text-gray-300">
-            Tender Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            placeholder="Tender Title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Tender Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              placeholder="Tender Title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
           <div className="mt-2">
-          <label className="block font-semibold text-gray-300">
-            Tender Description
-          </label>
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Tender Description
+            </label>
+            <textarea
+              name="description"
+              placeholder="Description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
           <div className="mt-2">
-          <label className="block font-semibold text-gray-300">Category</label>
-          <input
-            type="text"
-            name="category"
-            placeholder="Category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Category
+            </label>
+            <input
+              type="text"
+              name="category"
+              placeholder="Category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
           <div className="mt-2">
-          
-          <label className="block font-semibold text-gray-300">
-          Min Bid Amount
-          </label>
-          <input
-            type="number"
-            name="minBidAmount"
-            placeholder="Min Bid Amount (ETH)"
-            value={formData.minBidAmount}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Min Bid Amount
+            </label>
+            <input
+              type="number"
+              name="minBidAmount"
+              placeholder="Min Bid Amount (ETH)"
+              value={formData.minBidAmount}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
           <div className="mt-2">
-          <label className="block font-semibold text-gray-300">
-            Max Bid Amount
-          </label>
-          <input
-            type="number"
-            name="maxBidAmount"
-            placeholder="Max Bid Amount (ETH)"
-            value={formData.maxBidAmount}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Max Bid Amount
+            </label>
+            <input
+              type="number"
+              name="maxBidAmount"
+              placeholder="Max Bid Amount (ETH)"
+              value={formData.maxBidAmount}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
           <div className="mt-2">
-          <label className="block font-semibold text-gray-300">
-            Bid Opening Date
-          </label>
-          <input
-            type="date"
-            name="bidOpeningDate"
-            value={formData.bidOpeningDate}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Bid Opening Date
+            </label>
+            <input
+              type="date"
+              name="bidOpeningDate"
+              value={formData.bidOpeningDate}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
           <div className="mt-2">
-          <label className="block font-semibold text-gray-300">
-            Bid Closing Date
-          </label>
-          <input
-            type="date"
-            name="bidClosingDate"
-            value={formData.bidClosingDate}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Bid Closing Date
+            </label>
+            <input
+              type="date"
+              name="bidClosingDate"
+              value={formData.bidClosingDate}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
           <div className="mt-2">
-          <label className="block font-semibold text-gray-300">
-            Work Location
-          </label>
-          <input
-            type="text"
-            name="location"
-            placeholder="Work Location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-          />
+            <label className="block font-semibold text-gray-300">
+              Work Location
+            </label>
+            <input
+              type="text"
+              name="location"
+              placeholder="Work Location"
+              value={formData.location}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-700 bg-gray-800 p-2 rounded-md text-white placeholder-gray-400 mt-1 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
           </div>
 
           <button
@@ -273,4 +269,4 @@ const MakeTender = () => {
   );
 };
 
-export default MakeTender;
+// export MakeTender;

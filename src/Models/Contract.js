@@ -6,7 +6,7 @@ const MilestoneSchema = new mongoose.Schema({
   dueDate: Date,
   status: {
     type: String,
-    enum: ["Pending", "Completed", "Rejected"],
+    enum: ["Pending","Voted", "Completed", "Rejected"],
     default: "Pending",
   },
   approvalVotes: { type: Number, default: 0 },
@@ -20,9 +20,11 @@ const ContractSchema = new mongoose.Schema({
   bidAmount: Number,
   paidAmount: Number,
   createdAt: { type: Date, default: Date.now },
+  location: Object,
   blockchainContractId: String,
   transactionHash: String,
   milestones: [MilestoneSchema],
 });
 
-export default mongoose.models.Contract || mongoose.model("Contract", ContractSchema);
+export default mongoose.models.Contract ||
+  mongoose.model("Contract", ContractSchema);

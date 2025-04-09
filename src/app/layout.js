@@ -3,6 +3,11 @@ import "./globals.css";
 import Navbar from "@/Components/Navbar/navbar";
 import Footer from "@/Components/Footer/footer";
 
+import SessionWrapper from "@/lib/sessionWrapper";
+import { GovProvider } from "@/Context/govUser";
+import Profile from "@/Components/UserProfile/profile";
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -20,14 +25,23 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <GovProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+         
+        <SessionWrapper>
         <Navbar />
+        <Profile/>
         {children}
         <Footer />
+        </SessionWrapper>
+    
+      
+       
       </body>
     </html>
+    </GovProvider>
   );
 }

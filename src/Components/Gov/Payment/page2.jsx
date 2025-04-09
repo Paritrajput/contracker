@@ -2,10 +2,18 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
+import MilestoneTracker from "@/Components/People/voting";
 
-const AdminPaymentPage = ({ contract }) => {
-  const contractData = contract;
-  console.log("Contract Data:", contractData);
+const AdminPaymentPage = () => {
+    const searchParams = useSearchParams();
+    const contractParam = searchParams.get("contract");
+    const contractData = contractParam
+      ? JSON.parse(decodeURIComponent(contractParam))
+      : null;
+  
+      console.log(contractData)
+  console.log("Contract Data milestones:", contractData.milestones);
 
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +24,7 @@ const AdminPaymentPage = ({ contract }) => {
   const [contractor, setContractor] = useState(null);
   const [contractorRating, setContractorRating] = useState(null);
 
-  // ✅ Fetch Contractor Details (Fixed API Call)
+
   useEffect(() => {
     const fetchContractor = async () => {
       if (!contractData.winner) return;
@@ -52,7 +60,7 @@ const AdminPaymentPage = ({ contract }) => {
     try {
       await axios.post("/api/contractor/rating", {
         contractorId: contractData.winner,
-        userId: "currentUserId", // Replace with actual logged-in user ID
+        userId: "currentUserId", 
         rating: parseInt(newRating),
       });
       alert("Rating submitted!");
@@ -80,7 +88,7 @@ const AdminPaymentPage = ({ contract }) => {
     fetchTenders();
   }, []);
 
-  // ✅ Find Tender for This Contract
+
   useEffect(() => {
     if (tenders.length > 0) {
       const foundTender = tenders.find((m) => m._id === contractData.tenderId);
@@ -88,7 +96,7 @@ const AdminPaymentPage = ({ contract }) => {
     }
   }, [tenders, contractData.tenderId]);
 
-  // ✅ Fetch Payment History
+ 
   const getPayments = async () => {
     if (!contractData._id) return;
 
@@ -124,13 +132,13 @@ const AdminPaymentPage = ({ contract }) => {
     0
   );
   const progressPercentage = contractData.bidAmount
-    ? (totalPaymentsMade / contractData.bidAmount) * 100
+    ? (contractData.paidAmount  / contractData.bidAmount) * 100
     : 0;
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
       <h1 className="text-3xl font-bold text-center mb-6">
-        Admin Payment Dashboard
+        Contract Details
       </h1>
 
       {contractor ? (
@@ -203,16 +211,18 @@ const AdminPaymentPage = ({ contract }) => {
         </p>
       </div>
 
-      <h2 className="text-2xl font-semibold text-teal-400 mb-4">
+      <MilestoneTracker contractData={contractData}/>
+
+      <h2 className="text-2xl font-semibold text-white mb-4 justify-self-center">
         Payment History
       </h2>
       {loading ? (
         <p className="text-center text-gray-400">Loading payments...</p>
       ) : error ? (
         <p className="text-center text-red-500">{error}</p>
-      ) : requestedPayments.length > 0 ? (
+      ) : requestedPayments.filter((payment) => payment.status === "Completed" ).length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {requestedPayments.map((payment) => (
+          {requestedPayments.filter((payment) => payment.status === "Completed").map((payment) => (
             <div
               key={payment._id}
               className="bg-gray-900 p-6 rounded-lg shadow-md"

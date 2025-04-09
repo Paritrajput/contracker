@@ -2,24 +2,32 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import PublicProfile from "@/Components/UserProfile/public-profile";
+import { SessionProvider, useSession } from "next-auth/react";
 
 export default function ContractorLayout({ children }) {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("public-token");
+    // signOut()
+  
+    const token = localStorage.getItem("token");
+  
     if (!token) {
-      router.push("/authenticate/public-auth/login"); // Redirect to login if no token
+      router.push("/authenticate/public-auth/login");
     } else {
       setIsAuthenticated(true);
     }
   }, []);
 
-  if (!isAuthenticated) return null; // Prevent rendering content until auth check is done
+  if (!isAuthenticated) return null;
 
-  return <>{children}
-  <PublicProfile/>
-  </>;
+  return (
+    <>
+      <SessionProvider>
+        {children}
+        {/* <PublicProfile /> */}
+      </SessionProvider>
+    </>
+  );
 }

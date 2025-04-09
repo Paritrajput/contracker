@@ -1,9 +1,16 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
-function issueDetail() {
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="text-white p-4">Loading...</div>}>
+      <issueDetail />
+    </Suspense>
+  );
+}
+export function issueDetail() {
   const [issueData, setIssueData] = useState(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -98,4 +105,4 @@ function issueDetail() {
   );
 }
 
-export default issueDetail;
+
