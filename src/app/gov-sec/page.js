@@ -147,6 +147,10 @@ import { useRouter } from "next/navigation";
 export default function GovHomePage() {
   const router = useRouter();
   const { user } = useGovUser();
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
 
   console.log("user", user);
 
@@ -169,17 +173,25 @@ export default function GovHomePage() {
         <div className="flex justify-center flex-wrap gap-4 pt-6">
           {!user ? (
             <Link href="/login">
-              <button className="bg-white text-black hover:bg-gray-200 font-semibold px-4 py-2 rounded-2xl">
+              <button className="bg-white hover:bg-orange-400 text-white font-semibold px-4 py-2 rounded-2xl">
                 Login
               </button>
             </Link>
           ) : (
-            <div className="bg-white px-4 py-3 text-black rounded-xl flex items-center font-medium">
-              Welcome, {user.name}
-              <ArrowRight
-                className="ml-2 group-hover:translate-x-1 transition"
-                size={18}
-              />
+            <div className="flex gap-5 max-md:flex-col ">
+              <div className="bg-white px-4 py-2 text-black rounded-xl flex items-center">
+                welcome, {user.name}
+                <ArrowRight
+                  className="ml-2 group-hover:translate-x-1 transition"
+                  size={18}
+                />
+              </div>
+              <button
+                className="bg-red-800 justify-center px-4 py-2 text-white rounded-xl flex items-center"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </div>
           )}
         </div>

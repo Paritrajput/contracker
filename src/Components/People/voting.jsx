@@ -142,8 +142,8 @@ const MilestoneTracker = ({ contractData }) => {
   };
 
   return (
-    <div className=" bg-black/25 text-white p-6">
-      <h2 className="text-2xl font-semibold text-white mb-4 justify-self-center">
+    <div className=" bg-black/25 text-white md:p-6 p-1 ">
+      <h2 className="md:text-2xl text-xl font-semibold text-white mb-4 justify-self-center">
         Payment Requested
       </h2>
       {loading ? (
@@ -163,7 +163,7 @@ const MilestoneTracker = ({ contractData }) => {
               return (
                 <div
                   key={payment._id}
-                  className="bg-gray-900 p-6 rounded-lg shadow-md"
+                  className="bg-gray-900 md:p-6 p-3 rounded-lg shadow-md"
                 >
                   <p className="text-lg text-teal-400">ID: {payment._id}</p>
                   <p className="text-gray-400">
@@ -180,10 +180,12 @@ const MilestoneTracker = ({ contractData }) => {
                   <p className="text-gray-400">Reason: {payment.reason}</p>
                   <p className="text-yellow-400">Status: {payment.status}</p>
                   <div className="mt-4">
-                    <p className="text-sm text-gray-400">
-                      Time left:{" "}
-                      {Math.max(0, 0.8 - timeSinceRequest).toFixed(1)} hrs
-                    </p>
+                    {Math.max(0, 0.8 - timeSinceRequest).toFixed(1) > 0 && (
+                      <p className="text-sm text-gray-400">
+                        Time left:{" "}
+                        {Math.max(0, 0.8 - timeSinceRequest).toFixed(1)} hrs
+                      </p>
+                    )}
                     <div className="flex gap-4 mt-2">
                       {votingAvailable ? (
                         <button

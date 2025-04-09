@@ -27,8 +27,8 @@ export default function ContractsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#060611] p-6 text-white">
-      <h1 className="text-3xl font-bold text-center mb-6">Your Contracts</h1>
+    <div className="min-h-screen bg-[#060611] md:p-6 p-3 text-white">
+      <h1 className="md:text-3xl text-2xl font-bold text-center mb-6 text-teal-400">Your Contracts</h1>
 
       {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -49,12 +49,12 @@ export default function ContractsPage() {
             tenders.map((item, index) => (
               <div
                 key={index}
-                className="bg-gray-900 p-6 rounded-lg shadow-md transition hover:scale-105 hover:bg-gray-800"
+                className="bg-gray-900 md:p-6 p-3 rounded-lg shadow-md transition hover:scale-105 hover:bg-gray-800"
               >
                 <h2 className="text-xl font-semibold text-teal-400">
                   {item.contractId}
                 </h2>
-                <p className="text-gray-400 mt-2">Bid Amount: {item.bidAmount}</p>
+                <p className="text-gray-400 md:mt-2 mt-1">Bid Amount: {item.bidAmount}</p>
                 <button
                   onClick={() =>
                     router.push(
@@ -63,7 +63,7 @@ export default function ContractsPage() {
                       )}`
                     )
                   }
-                  className="mt-4 bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition"
+                  className="md:mt-4 mt-3 bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition"
                 >
                   View Details
                 </button>

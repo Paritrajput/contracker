@@ -89,9 +89,12 @@ export const MakeTender = () => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-[#060611] text-white p-6 min-h-screen">
-      <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-lg mt-6">
-        <h2 className="text-2xl font-bold text-teal-400">
+    <div className="flex flex-col items-center bg-[#060611] text-white md:p-6 p-3 min-h-screen">
+          <div className="md:text-3xl text-2xl font-bold text-teal-400 mb-4 text-center">
+        Create Tender
+      </div>
+      <div className="bg-gray-900 p-3 md:p-6 rounded-lg shadow-lg w-full max-w-lg mt-6">
+        <h2 className="text-2xl font-bold text-white">
           Enter Tender Details
         </h2>
 

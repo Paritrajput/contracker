@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import MilestoneTracker from "@/Components/People/voting";
+import ProtectedRoute from "@/Components/ProtectedRoutes/protected-routes";
 
 const AdminPaymentPage = () => {
   const searchParams = useSearchParams();
@@ -76,6 +77,7 @@ const AdminPaymentPage = () => {
         rating: parseInt(newRating),
       });
       alert("Rating submitted!");
+
       setNewRating("");
     } catch (error) {
       console.error("Failed to submit rating", error);
@@ -146,117 +148,121 @@ const AdminPaymentPage = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[#060611] text-white p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Contract Details</h1>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-[#060611] text-white md:p-6 p-3">
+        <h1 className="text-3xl font-bold text-center mb-6">
+          Contract Details
+        </h1>
 
-      {contractor ? (
-        <div className="bg-gray-900 p-6 rounded-lg shadow-md mb-6 flex gap-20">
-          <div>
-            <h2 className="text-2xl font-semibold text-teal-400">
-              Contractor Details
-            </h2>
-            <p className="text-gray-400">Name: {contractor.name}</p>
-            <p className="text-gray-400">Email: {contractor.email}</p>
-            <p className="text-gray-400">
-              Experience: {contractor.experienceYears} years
-            </p>
-            <p className="text-yellow-400 font-semibold">
-              Rating: {contractorRating} ⭐
-            </p>
-          </div>
-          <div className="">
-            <h3 className="text-lg font-semibold text-teal-400">
-              Rate the Contractor
-            </h3>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                min="1"
-                max="5"
-                className="p-2 bg-gray-800 text-white rounded"
-                value={newRating}
-                onChange={(e) => setNewRating(e.target.value)}
-              />
-              <button
-                className="bg-teal-500 text-white px-4 py-2 rounded"
-                onClick={submitRating}
-              >
-                Submit Rating
-              </button>
+        {contractor ? (
+          <div className="bg-gray-900 p-6 rounded-lg shadow-md mb-6 flex max-md:flex-col gap-5 md:gap-20">
+            <div>
+              <h2 className="text-2xl font-semibold text-teal-400">
+                Contractor Details
+              </h2>
+              <p className="text-gray-400">Name: {contractor.name}</p>
+              <p className="text-gray-400">Email: {contractor.email}</p>
+              <p className="text-gray-400">
+                Experience: {contractor.experienceYears || 0} years
+              </p>
+              <p className="text-yellow-400 font-semibold">
+                Rating: {contractorRating || 0} ⭐
+              </p>
+            </div>
+            <div className="">
+              <h3 className="text-lg font-semibold text-teal-400">
+                Rate the Contractor
+              </h3>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  className="p-2 bg-gray-800 text-white rounded"
+                  value={newRating}
+                  onChange={(e) => setNewRating(e.target.value)}
+                />
+                <button
+                  className="bg-teal-500 text-white px-4 py-2 rounded"
+                  onClick={submitRating}
+                >
+                  Submit Rating
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <p className="text-gray-400">Loading contractor details...</p>
-      )}
+        ) : (
+          <p className="text-gray-400">Loading contractor details...</p>
+        )}
 
-      <div className="bg-gray-900 p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-semibold text-teal-400">
-          Contract Details
+        <div className="bg-gray-900 p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-semibold text-teal-400">
+            Contract Details
+          </h2>
+          <p className="text-gray-400">ID: {contractData._id}</p>
+          <p className="text-gray-400">
+            Contract Title: {myTender?.title || "N/A"}
+          </p>
+          <p className="text-gray-400">
+            Contract Description: {myTender?.description || "N/A"}
+          </p>
+          <p className="text-gray-400">
+            Total Budget: ₹{contractData.bidAmount}
+          </p>
+        </div>
+
+        <div className="bg-gray-800 p-4 rounded-md shadow-md mb-6">
+          <h3 className="text-lg font-semibold text-teal-400">
+            Contract Progress
+          </h3>
+          <div className="w-full bg-gray-700 h-4 rounded-md overflow-hidden mt-2">
+            <div
+              className="bg-green-500 h-4"
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
+          </div>
+          <p className="text-gray-400 mt-2">
+            {progressPercentage.toFixed(2)}% Completed
+          </p>
+        </div>
+
+        <MilestoneTracker contractData={contractData} />
+
+        <h2 className="text-2xl font-semibold text-white mb-4 justify-self-center">
+          Payment History
         </h2>
-        <p className="text-gray-400">ID: {contractData._id}</p>
-        <p className="text-gray-400">
-          Contract Title: {myTender?.title || "N/A"}
-        </p>
-        <p className="text-gray-400">
-          Contract Description: {myTender?.description || "N/A"}
-        </p>
-        <p className="text-gray-400">Total Budget: ₹{contractData.bidAmount}</p>
-      </div>
+        {loading ? (
+          <p className="text-center text-gray-400">Loading payments...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : requestedPayments.filter(
+            (payment) => payment.status === "Completed"
+          ).length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {requestedPayments
+              .filter((payment) => payment.status === "Completed")
+              .map((payment) => (
+                <div
+                  key={payment._id}
+                  className="bg-gray-900 p-6 rounded-lg shadow-md"
+                >
+                  <p className="text-lg text-teal-400">ID: {payment._id}</p>
+                  <p className="text-gray-400">
+                    Bid Amount: ₹{payment.bidAmount}
+                  </p>
+                  <p className="text-gray-400">
+                    Payment Requested: ₹{payment.paymentMade}
+                  </p>
+                  <p className="text-gray-400">Reason: {payment.reason}</p>
+                  <p className="text-yellow-400">Status: {payment.status}</p>
+                </div>
+              ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-400">No payment history found.</p>
+        )}
 
-      <div className="bg-gray-800 p-4 rounded-md shadow-md mb-6">
-        <h3 className="text-lg font-semibold text-teal-400">
-          Contract Progress
-        </h3>
-        <div className="w-full bg-gray-700 h-4 rounded-md overflow-hidden mt-2">
-          <div
-            className="bg-green-500 h-4"
-            style={{ width: `${progressPercentage}%` }}
-          ></div>
-        </div>
-        <p className="text-gray-400 mt-2">
-          {progressPercentage.toFixed(2)}% Completed
-        </p>
-      </div>
-
-      <MilestoneTracker contractData={contractData} />
-  
-
-      <h2 className="text-2xl font-semibold text-white mb-4 justify-self-center">
-        Payment History
-      </h2>
-      {loading ? (
-        <p className="text-center text-gray-400">Loading payments...</p>
-      ) : error ? (
-        <p className="text-center text-red-500">{error}</p>
-      ) : requestedPayments .filter((payment) => payment.status === "Approve").length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {requestedPayments
-            .filter((payment) => payment.status === "Approve")
-            .map((payment) => (
-              <div
-                key={payment._id}
-                className="bg-gray-900 p-6 rounded-lg shadow-md"
-              >
-                <p className="text-lg text-teal-400">ID: {payment._id}</p>
-                <p className="text-gray-400">
-                  Bid Amount: ₹{payment.bidAmount}
-                </p>
-                <p className="text-gray-400">
-                  Payment Requested: ₹{payment.paymentMade}
-                </p>
-                <p className="text-gray-400">Reason: {payment.reason}</p>
-                <p className="text-yellow-400">Status: {payment.status}</p>
-
-                
-              </div>
-            ))}
-        </div>
-      ) : (
-        <p className="text-center text-gray-400">No payment history found.</p>
-      )}
-
-{/* {showModal && (
+        {/* {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-gray-900 rounded-2xl p-6 w-full max-w-md shadow-xl">
             <h2 className="text-2xl font-semibold mb-4 text-white">
@@ -329,7 +335,8 @@ const AdminPaymentPage = () => {
           </div>
         </div>
       )} */}
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 };
 

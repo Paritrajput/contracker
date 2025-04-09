@@ -13,6 +13,8 @@ export const GovProvider = ({ children }) => {
   const [isSuperOwner, setIsSuperOwner] = useState(false);
   const [user, setUser] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(true); 
+
 
   useEffect(() => {
     try {
@@ -29,6 +31,10 @@ export const GovProvider = ({ children }) => {
     } catch (error) {
       console.error("Token decode error:", error);
     }
+    finally{
+
+      setLoading(false);
+    }
   }, []);
 
   return (
@@ -37,12 +43,14 @@ export const GovProvider = ({ children }) => {
         showPopup,
         setShowPopup,
         user,
+        setUser,
         govProfile,
         setGovProfile,
         isOwner,
         setIsOwner,
         isSuperOwner,
         setIsSuperOwner,
+        loading
       }}
     >
       {children}

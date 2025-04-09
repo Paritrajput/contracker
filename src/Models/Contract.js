@@ -1,3 +1,4 @@
+import { issueDetail } from "@/app/gov-sec/issue-details/page";
 import mongoose from "mongoose";
 
 const MilestoneSchema = new mongoose.Schema({
@@ -6,7 +7,7 @@ const MilestoneSchema = new mongoose.Schema({
   dueDate: Date,
   status: {
     type: String,
-    enum: ["Pending","Voted", "Completed", "Rejected"],
+    enum: ["Pending", "Voted", "Completed", "Rejected"],
     default: "Pending",
   },
   approvalVotes: { type: Number, default: 0 },
@@ -21,6 +22,7 @@ const ContractSchema = new mongoose.Schema({
   paidAmount: Number,
   createdAt: { type: Date, default: Date.now },
   location: Object,
+  issueDetail: Object,
   blockchainContractId: String,
   transactionHash: String,
   milestones: [MilestoneSchema],

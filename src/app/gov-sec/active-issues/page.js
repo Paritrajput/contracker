@@ -33,8 +33,8 @@ export default function IssuesList() {
 
 
   return (
-    <div className="p-6 min-h-screen bg-[#060611] text-white">
-      <h1 className="text-3xl font-bold mb-6 text-center">Reported Issues</h1>
+    <div className="md:p-6 p-3 min-h-screen bg-[#060611] text-white">
+      <h1 className="md:text-3xl text-2xl text-teal-400 font-bold mb-6 text-center">Reported Issues</h1>
       <div className="grid gap-6">
         {loading ? (
           Array.from({ length: 3 }).map((_, index) => (
@@ -48,15 +48,15 @@ export default function IssuesList() {
           issues.map((item, index) => (
             <div
               key={index}
-              className="bg-gray-900 p-5 rounded-lg shadow-lg border border-gray-700 transition transform hover:scale-105 hover:border-teal-400"
+              className="bg-gray-900 md:p-5 p-3 rounded-lg shadow-lg border border-gray-700 transition transform hover:scale-105 hover:border-teal-400"
             >
               <h2 className="text-xl font-semibold text-teal-300">{item.issue_type}</h2>
-              <p className="text-gray-300 mt-2">{item.description}</p>
+              <p className="text-gray-300 mt-1 md:mt-2">{item.description}</p>
               <button
                 onClick={() =>
                   router.push(`/gov-sec/issue-details?issue=${encodeURIComponent(JSON.stringify(item))}`)
                 }
-                className="mt-4 bg-teal-500 text-black font-semibold px-4 py-2 rounded-md hover:bg-teal-400 transition"
+                className="mt-2 md:mt-4 bg-teal-500 text-black font-semibold px-4 py-2 rounded-md hover:bg-teal-400 transition"
               >
                 🔍 View Details
               </button>

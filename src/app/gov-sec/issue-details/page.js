@@ -6,11 +6,11 @@ import React, { Suspense, useEffect, useState } from "react";
 export default function Page() {
   return (
     <Suspense fallback={<div className="text-white p-4">Loading...</div>}>
-      <issueDetail />
+      <IssueDetail />
     </Suspense>
   );
 }
-export function issueDetail() {
+export function IssueDetail() {
   const [issueData, setIssueData] = useState(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -32,8 +32,8 @@ export function issueDetail() {
           method: "PUT",
         }
       );
-      if(response.ok){
-        router.push("/gov-sec")
+      if (response.ok) {
+        router.push("/gov-sec");
       }
       console.log(response);
     } catch (error) {
@@ -42,9 +42,9 @@ export function issueDetail() {
   };
 
   return (
-    <div className="my-16">
+    <div className="my-16 p-3">
       {issueData && (
-        <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-lg justify-self-center">
+        <div className="bg-gray-900 md:p-6 p-3 rounded-lg shadow-lg w-full max-w-lg justify-self-center">
           <h2 className="text-2xl font-bold text-teal-400">Issue Details</h2>
 
           {parsedIssue.image && (
@@ -97,12 +97,15 @@ export function issueDetail() {
             >
               Resolve
             </button>
-            <button onClick={handleRejectIssue} className="bg-red-600 rounded-xl py-2 px-3">Reject</button>
+            <button
+              onClick={handleRejectIssue}
+              className="bg-red-600 rounded-xl py-2 px-3"
+            >
+              Reject
+            </button>
           </div>
         </div>
       )}
     </div>
   );
 }
-
-

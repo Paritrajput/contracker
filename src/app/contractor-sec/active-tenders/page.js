@@ -27,8 +27,8 @@ export default function TendersPage() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-6 bg-[#060611] text-white">
-      <h1 className="text-3xl font-bold mb-6 text-teal-400">Active Tenders</h1>
+    <div className="flex flex-col items-center min-h-screen md:p-6 p-3 bg-[#060611] text-white">
+      <h1 className="md:text-3xl text-2xl font-bold mb-6 text-teal-400">Active Tenders</h1>
       {error && <p className="text-red-500">{error}</p>}
       <div className="w-full max-w-3xl">
         {loading
@@ -40,7 +40,7 @@ export default function TendersPage() {
                 key={index}
                 title={item.title}
                 content={item.description}
-                timeOfComplition={item.bidClosingDate}
+                timeOfComplition={new Date(item.bidClosingDate).toLocaleString()}
                 onClick={() =>
                   router.push(
                     `/contractor-sec/tender-desc?tender=${encodeURIComponent(
@@ -65,7 +65,7 @@ function CardComponent({ title, content, timeOfComplition, onClick }) {
       <p className="text-green-400 text-xl  font-semibold"> {title}</p>
       <h2 className="font-medium text-white">{content}</h2>
       <span className="flex items-center">
-        <p className="font-normal text-lg text-green-400">Last date for bid submission : </p>
+        <p className="font-normal text-lg text-green-400">Bidding deadline : </p>
         <p className="text-white font-medium "> {timeOfComplition}</p>
       </span>
     </div>

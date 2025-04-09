@@ -93,8 +93,8 @@ export default function Page2() {
   // }, []);
 
   return (
-    <div className="min-h-screen bg-[#060611] p-6 text-teal-400">
-      <h1 className="text-3xl font-bold text-center mb-6">
+    <div className="min-h-screen bg-[#060611] md:p-6 p-3 text-teal-400">
+      <h1 className="md:text-3xl text-2xl font-bold text-center mb-6">
         Contracts in your area
       </h1>
 
@@ -118,9 +118,10 @@ export default function Page2() {
                 key={index}
                 className="bg-[#060611] border-1 border-gray-700 p-6 rounded-lg shadow-md transition hover:scale-105 hover:bg-gray-800"
               >
-                <h2 className="text-xl font-semibold text-teal-400">
+                <h2 className="md:text-xl text-lg font-semibold text-teal-400">
                   {item.contractId}
                 </h2>
+                 <h2>{item.location.lat}</h2>
                
                 <p className="text-gray-400 mt-2">
                   Bid Amount: {item.bidAmount}

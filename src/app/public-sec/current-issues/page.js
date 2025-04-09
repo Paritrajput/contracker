@@ -80,9 +80,9 @@ export default function Page1() {
   }, [userLocation, issues2]);
 
   return (
-    <div className="p-6 min-h-screen bg-[#060611] text-white overflow-y-auto">
+    <div className="md:p-6 p-3 min-h-screen bg-[#060611] text-white overflow-y-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h1 className="text-3xl font-bold text-teal-400 mb-4 sm:mb-0">
+        <h1 className="md:text-3xl text-2xl  font-bold text-teal-400 mb-4 sm:mb-0">
           Reported Issues
         </h1>
         <select
@@ -117,14 +117,14 @@ export default function Page1() {
               <h2 className="text-xl font-semibold text-teal-400">
                 {issue.issue_type}
               </h2>
-              <p className="text-gray-300">{issue.description}</p>
+              <p className="text-gray-300 max-md:hidden">{issue.description}</p>
               <p className="text-gray-300">
                 <strong className="text-teal-400">Location:</strong>{" "}
                 {issue.placename}
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 mt-2">
-                <p>
+              <div className="flex flex-wrap items-center gap-4 mt-0">
+                <p className="max-md:hidden">
                   <strong className="text-teal-400">Votes:</strong> Approvals:{" "}
                   {issue.approval}, Denials: {issue.denial}
                 </p>

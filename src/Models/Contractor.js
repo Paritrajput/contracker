@@ -5,8 +5,9 @@ const ContractorSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   companyName: String,
-  experienceYears:Number,
-  contractorRating:Number,
+  experienceYears: Number,
+  contractorRating: Number,
 });
 
-export default mongoose.models.Contractor || mongoose.model("Contractor", ContractorSchema);
+export default mongoose.models.Contractor ||
+  mongoose.model("Contractor", ContractorSchema);

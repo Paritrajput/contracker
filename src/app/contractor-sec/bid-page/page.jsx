@@ -83,8 +83,9 @@ const BidForm = () => {
   // };
 
   return (
-    <div className="flex justify-center my-9 items-center">
-      <div className="p-4 bg-gray-900 text-white rounded-lg w-[40%]">
+    <div className="flex flex-col  my-9 items-center max-md:p-3 max-md:min-h-[80vh]">
+      <div className="text-teal-400 md:text-3xl text-2xl font-bold my-5  ">Bidding Portal</div>
+      <div className=" bg-gray-900 text-white rounded-lg md:w-[40%] md:p-6 p-3">
         <h2 className="text-lg font-bold">Place a Bid</h2>
         <form onSubmit={handleSubmit}>
           <label className="block mt-2">Bid Amount</label>

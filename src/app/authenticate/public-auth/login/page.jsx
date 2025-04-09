@@ -24,7 +24,7 @@ export default function ContractorLogin() {
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
 
-        router.push("/public-sec");
+        router.push("/");
       }
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
@@ -93,8 +93,7 @@ export function LoginWithGoogle() {
       console.log(decoded);
       localStorage.setItem("token", session.user.jwt); // ✅
 
-      // localStorage.setItem("token", JSON.stringify(userData));
-      router.push("/public-sec");
+      router.push("/");
     }
   }, [session]);
 

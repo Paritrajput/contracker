@@ -14,6 +14,7 @@ import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import markerRetina from "leaflet/dist/images/marker-icon-2x.png";
+import ProtectedRoute from "@/Components/ProtectedRoutes/protected-routes";
 
 const PeopleIssue = () => {
   const [issueName, setIssueName] = useState("");
@@ -52,9 +53,9 @@ const PeopleIssue = () => {
       },
     });
     const customMarker = new L.Icon({
-      iconUrl: markerIcon,
-      iconRetinaUrl: markerRetina,
-      shadowUrl: markerShadow,
+      iconUrl: "https://img.icons8.com/?size=100&id=84891&format=png&color=000000",
+      // iconRetinaUrl:  "https://img.icons8.com/?size=100&id=84891&format=png&color=000000",
+      // shadowUrl:  "https://img.icons8.com/?size=100&id=7880&format=png&color=000000",
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
@@ -149,95 +150,97 @@ const PeopleIssue = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-gray-900 text-white shadow-lg rounded-lg my-5">
-      <h1 className="text-2xl font-bold mb-4">Raise a Public Issue</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Issue Name *"
-          value={issueName}
-          onChange={(e) => setIssueName(e.target.value)}
-          className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-white"
-          required
-        />
-        <textarea
-          placeholder="Description *"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-white"
-          required
-        ></textarea>
-        <div className="flex gap-2 relative">
+    <ProtectedRoute>
+      <div className="max-w-2xl mx-auto p-6 bg-gray-900 text-white shadow-lg rounded-lg my-5">
+        <h1 className="text-2xl font-bold mb-4">Raise a Public Issue</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            placeholder="Search Location *"
-            value={searchLocation}
-            onChange={handleSearchChange}
+            placeholder="Issue Name *"
+            value={issueName}
+            onChange={(e) => setIssueName(e.target.value)}
             className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-white"
+            required
           />
-          {suggestions.length > 0 && (
-            <ul className="absolute z-10 bg-gray-800 text-white border border-gray-700 rounded mt-12 w-full max-h-96 overflow-auto">
-              {suggestions.map((s, i) => (
-                <li
-                  key={i}
-                  className="p-2 hover:bg-gray-700 cursor-pointer"
-                  onClick={() => {
-                    setSearchLocation(s);
-                    setSuggestions([]);
-                    handleSearchLocation();
-                  }}
-                >
-                  {s}
-                </li>
-              ))}
-            </ul>
-          )}
+          <textarea
+            placeholder="Description *"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-white"
+            required
+          ></textarea>
+          <div className="flex gap-2 relative">
+            <input
+              type="text"
+              placeholder="Search Location *"
+              value={searchLocation}
+              onChange={handleSearchChange}
+              className="w-full p-2 border rounded bg-gray-800 border-gray-700 text-white"
+            />
+            {suggestions.length > 0 && (
+              <ul className="absolute z-20 bg-gray-800 text-white border border-gray-700 rounded mt-12 w-full md:max-h-96 max-h-64  overflow-auto">
+                {suggestions.map((s, i) => (
+                  <li
+                    key={i}
+                    className="p-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={() => {
+                      setSearchLocation(s);
+                      setSuggestions([]);
+                      handleSearchLocation();
+                    }}
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <button
+              type="button"
+              onClick={handleSearchLocation}
+              className="bg-blue-600 text-white px-4 rounded hover:bg-blue-500"
+            >
+              Search
+            </button>
+          </div>
+          <div className="w-full h-96 mt-2 z-[10]">
+            <MapContainer
+              center={[position.lat, position.lng]}
+              zoom={5}
+              className="h-full w-full z-[10]"
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <LocationMarker />
+              <ChangeMapView />
+            </MapContainer>
+          </div>
+          <div className="mt-2 p-2 bg-gray-800 rounded-lg">
+            <p>
+              <strong>Selected Location:</strong> {placeName}
+            </p>
+            <p>
+              <strong>Coordinates:</strong> {position.lat}, {position.lng}
+            </p>
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setIssueImg(e.target.files[0])}
+            className="p-2 border rounded bg-gray-800 border-gray-700 text-white max-md:w-[90%]"
+          />
           <button
-            type="button"
-            onClick={handleSearchLocation}
-            className="bg-blue-600 text-white px-4 rounded hover:bg-blue-500"
+            type="submit"
+            className={`w-full px-4 py-2 rounded-lg transition font-semibold ${
+              loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-500"
+            } text-white`}
+            disabled={loading}
           >
-            Search
+            {loading ? "Submitting..." : "Submit Issue"}
           </button>
-        </div>
-        <div className="w-full h-96 mt-2">
-          <MapContainer
-            center={[position.lat, position.lng]}
-            zoom={5}
-            className="h-full w-full"
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <LocationMarker />
-            <ChangeMapView />
-          </MapContainer>
-        </div>
-        <div className="mt-2 p-2 bg-gray-800 rounded-lg">
-          <p>
-            <strong>Selected Location:</strong> {placeName}
-          </p>
-          <p>
-            <strong>Coordinates:</strong> {position.lat}, {position.lng}
-          </p>
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setIssueImg(e.target.files[0])}
-          className="p-2 border rounded bg-gray-800 border-gray-700 text-white"
-        />
-        <button
-          type="submit"
-          className={`w-full px-4 py-2 rounded-lg transition font-semibold ${
-            loading
-              ? "bg-gray-500 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-500"
-          } text-white`}
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Submit Issue"}
-        </button>
-      </form>
-    </div>
+        </form>
+      </div>
+    </ProtectedRoute>
   );
 };
 

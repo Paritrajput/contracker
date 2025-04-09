@@ -1,44 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const AdminPaymentPage = (contract) => {
-  //   const searchParams = useSearchParams();
-  //   const contract = searchParams.get("contract");
-  //   const contractData = contract ? JSON.parse(contract) : null;
   const contractData = contract.contract;
-  console.log(contractData);
-
-  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [requestedPayments, setRequestedPayments] = useState([]);
+  const [error, setError] = useState("");
 
   const getPayments = async () => {
     const contractId = contractData._id;
 
     try {
-      const response = await fetch(`/api/payment/get-payments/${contractId}`, {
-        method: "GET",
-      });
-
+      const response = await fetch(`/api/payment/get-payments/${contractId}`);
       const data = await response.json();
-      console.log("data", data);
       if (data) {
-        console.log(data);
         setRequestedPayments(data);
-        setLoading(false);
       } else {
-        alert("Error: " + data.massage);
-        setLoading(false);
+        alert("Error: " + data.message);
       }
     } catch (error) {
-      console.error("Payment submission failed", error);
+      console.error("Payment fetch failed", error);
+      setError("Failed to fetch payment details.");
+    } finally {
       setLoading(false);
-      alert("Failed to submit payment details.");
     }
   };
+
   useEffect(() => {
     getPayments();
   }, []);
@@ -57,7 +45,7 @@ const AdminPaymentPage = (contract) => {
       const data = await res.json();
       if (res.ok) {
         alert(`Payment ${action}d successfully!`);
-        // if (onUpdate) onUpdate();
+        getPayments(); // Refresh the list
       } else {
         alert(data.message || `Failed to ${action} payment`);
       }
@@ -67,9 +55,10 @@ const AdminPaymentPage = (contract) => {
     }
     setLoading(false);
   };
+
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">
+    <div className="min-h-screen bg-[#060611] text-white p-4 sm:p-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">
         Admin Payment Dashboard
       </h1>
 
@@ -77,44 +66,47 @@ const AdminPaymentPage = (contract) => {
         <p className="text-center text-gray-400">Loading payments...</p>
       ) : error ? (
         <p className="text-center text-red-500">{error}</p>
-      ) : requestedPayments.filter((payment) => payment.status === "Pending")
-          .length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      ) : requestedPayments.filter((p) => p.status === "Pending").length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {requestedPayments
-            .filter((payment) => payment.status === "Pending")
+            .filter((p) => p.status === "Pending")
             .map((payment) => (
               <div
                 key={payment._id}
-                className="bg-gray-900 p-6 rounded-lg shadow-md"
+                className="bg-gray-900 p-4 sm:p-6 rounded-lg shadow-md"
               >
-                <p className="text-lg text-teal-400">
+                <p className="text-sm sm:text-lg text-teal-400 break-words">
                   ID: {payment.contractId}
                 </p>
-                <p className="text-gray-400">
+                <p className="text-gray-400 text-sm sm:text-base">
                   Bid Amount: ₹{payment.bidAmount}
                 </p>
-                <p className="text-gray-400">
-                  Payment Requested: ₹{payment.paymentMade}
+                <p className="text-gray-400 text-sm sm:text-base">
+                  Requested: ₹{payment.paymentMade}
                 </p>
-                <p className="text-gray-400">Reason: {payment.reason}</p>
-                <p className="text-gray-400">
-                  Votes- Approvals: {payment.approvalVotes?.length} ,
-                  Rejections:{payment.rejectionVotes?.length}
+                <p className="text-gray-400 text-sm sm:text-base">
+                  Reason: {payment.reason}
                 </p>
-                <p className="text-yellow-400">Status: {payment.status}</p>
+                <p className="text-gray-400 text-sm sm:text-base">
+                  Votes - Approvals: {payment.approvalVotes?.length}, Rejections:{" "}
+                  {payment.rejectionVotes?.length}
+                </p>
+                <p className="text-yellow-400 font-semibold mt-2 text-sm sm:text-base">
+                  Status: {payment.status}
+                </p>
 
-                <div className="flex justify-between mt-4">
+                <div className="flex flex-col sm:flex-row gap-2 justify-between mt-4">
                   <button
                     onClick={() => handleAction("Approve", payment._id)}
                     disabled={loading}
-                    className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-md"
+                    className="w-full sm:w-auto px-4 py-2 bg-green-500 hover:bg-green-600 rounded-md"
                   >
                     {loading ? "Processing..." : "Approve"}
                   </button>
                   <button
                     onClick={() => handleAction("Deny", payment._id)}
                     disabled={loading}
-                    className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-md"
+                    className="w-full sm:w-auto px-4 py-2 bg-red-500 hover:bg-red-600 rounded-md"
                   >
                     {loading ? "Processing..." : "Deny"}
                   </button>

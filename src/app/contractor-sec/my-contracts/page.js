@@ -50,8 +50,8 @@ export default function ContractsPage() {
   }, [contractorId]);
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-6 bg-[#060611] text-white">
-      <h1 className="text-3xl font-bold mb-6 text-teal-400">Your Contracts</h1>
+    <div className="flex flex-col items-center min-h-screen md:p-6 p-3 bg-[#060611] text-white">
+      <h1 className="md:text-3xl text-2xl font-bold mb-6 text-teal-400">Your Contracts</h1>
       <div className="w-full max-w-3xl">
         {loading ? (
           <SkeletonCards />
@@ -64,7 +64,7 @@ export default function ContractsPage() {
             <CardComponent
               key={item.contractId}
               title={`Contract ID: ${item.mongoContractId}`}
-              content={`Bid Amount: ${item.contractAmount} ETH`}
+              content={`Bid Amount: ${item.contractAmount} Rs`}
               status={`Status: ${item.isCompleted ? "Completed" : "Pending"}`}
               onClick={() =>
                 router.push(
@@ -87,7 +87,7 @@ function CardComponent({ title, content, status, onClick }) {
       className="bg-gray-900 p-4 rounded-lg shadow-lg mb-4 cursor-pointer transition-transform transform hover:scale-105 hover:bg-gray-800 border border-gray-700"
       onClick={onClick}
     >
-      <h2 className="text-xl font-semibold text-white">{title}</h2>
+      <h2 className="md:text-xl text-lg font-semibold text-white">{title}</h2>
       <p className="text-green-400 font-medium">{content}</p>
       <p className="text-green-400 font-medium">{status}</p>
     </div>

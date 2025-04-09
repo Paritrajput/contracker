@@ -4,11 +4,11 @@ import { IoIosSend } from "react-icons/io";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white py-10 px-3">
-      <div className="mx-5  grid grid-cols-1 md:grid-cols-3 gap-8 border-t p-5 border-gray-700">
-        <div>
+    <footer className="bg-black text-white md:py-10 py-5 px-3">
+      <div className="md:mx-5 mx-1  grid grid-cols-1 md:grid-cols-3 md:gap-8 gap-4 border-t md:p-5 p-1 border-gray-700">
+        <div className="max-md:hidden">
           <h3 className="text-xl font-bold mb-4">ConTracker</h3>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-400 ">
             ConTracker is a blockchain-powered public works transparency
             platform. Track tenders, verify milestones, and ensure funds reach
             the right hands.
@@ -16,8 +16,8 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-          <ul className="space-y-2 text-sm text-gray-300">
+          <h4 className="md:text-lg text-md font-semibold md:mb-4">Quick Links</h4>
+          <ul className="md:space-y-2 text-sm text-gray-300 max-md:flex max-md:gap-2">
             <li>
               <a href="/" className="hover:text-white">
                 Home
@@ -37,13 +37,17 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-lg font-semibold mb-4">Connect With Us</h4>
-          <p className="text-sm text-gray-400 mb-2">
+          <h4 className="md:text-lg text-md font-semibold md:mb-4">Connect With Us</h4>
+          {/* <p className="text-sm text-gray-400 mb-2">
             Email: support@contracker.gov
-          </p>
+          </p> */}
           <div className="flex gap-2 items-center">
-          <input type="text" placeholder="write your message" className="bg-none border-1 p-1 rounded-xl" />
-          <IoIosSend size={25} />
+            <input
+              type="text"
+              placeholder="write your message"
+              className="bg-none border-1 p-1 rounded-xl"
+            />
+            <IoIosSend size={25} />
           </div>
           <div className="flex space-x-4 mt-2">
             <a
@@ -74,8 +78,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mt-10 mx-5 border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
-        <p className="text-lg">
+      <div className="md:mt-10 mt-5 md:mx-5 mx-2 border-t border-gray-700 md:pt-6 pt-3 text-center text-sm text-gray-500">
+        <p className="md:text-lg text-md">
           Made With ❤️ By{" "}
           <span className="text-teal-400 font-semibold">Team Vibhav</span>
         </p>

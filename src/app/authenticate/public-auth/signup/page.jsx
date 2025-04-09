@@ -25,7 +25,7 @@ export default function ContractorSignup() {
     try {
       const res = await axios.post("/api/public-sec/signup", formData);
       if (res.data.success) {
-        router.push("/Public-Sec/login");
+        router.push("/authenticate/public-auth/login");
       }
     } catch (err) {
       setError(err.response?.data?.error || "Signup failed");
@@ -36,7 +36,7 @@ export default function ContractorSignup() {
     <div className="flex items-center justify-center min-h-screen bg-[#060611] text-white">
       <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-teal-400 text-center">
-          Contractor Signup
+          Public Signup
         </h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="mt-4">
@@ -65,7 +65,7 @@ export default function ContractorSignup() {
             required
           />
 
-          <button className="w-full bg-teal-500 hover:bg-teal-600 text-white p-2 rounded transition">
+          <button className="w-full bg-teal-500 hover:bg-teal-600 text-white p-2 rounded transition" >
             Sign Up
           </button>
         </form>

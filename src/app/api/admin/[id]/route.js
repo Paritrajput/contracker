@@ -32,12 +32,7 @@ export async function POST(req, context) {
 
     adminRequest.isVerified = true;
     await adminRequest.save();
-    await sendWinnerNotification(
-      contractorEmail,
-      contractorName,
-      title,
-      bidAmount
-    );
+    await sendWinnerNotification(user.email, user.name);
     return NextResponse.json(
       { message: "Admin request approved", data: adminRequest },
       { status: 200 }
@@ -50,7 +45,6 @@ export async function POST(req, context) {
     );
   }
 }
-
 
 async function sendWinnerNotification(email, name) {
   try {
@@ -92,7 +86,6 @@ async function sendWinnerNotification(email, name) {
         </div>
       `,
     };
-    
 
     await transporter.sendMail(mailOptions);
     console.log(`📧 Email sent to ${email}`);

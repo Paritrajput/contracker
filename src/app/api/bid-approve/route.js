@@ -91,7 +91,7 @@ export async function POST(req) {
       //     dueDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
       //   },
       // ];
-      console.log(issueDetails.location);
+      console.log("location: ", issueDetails);
       // Create and save contract
       const newContract = new Contract({
         contractId: `CON-${Date.now()}`,
@@ -100,6 +100,7 @@ export async function POST(req) {
         bidAmount,
         paidAmount: 0,
         milestones: milestones,
+        issueDetails:issueDetails,
         location: issueDetails.location,
         createdAt: new Date(),
         blockchainContractId: null,

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
+import ProtectedRoute from "@/Components/ProtectedRoutes/protected-routes";
 
 const PeopleVote = () => {
   const router = useRouter();
@@ -118,7 +119,8 @@ const PeopleVote = () => {
     return <p className="text-center text-white">Issue not found.</p>;
 
   return (
-    <div className=" min-h-screen bg-[#060611] p-6">
+      <ProtectedRoute>
+    <div className=" min-h-screen bg-[#060611] md:p-6 p-3">
       <h1 className="text-3xl font-extrabold justify-self-center my-5 text-teal-400">Vote Issue</h1>
       <div className="bg-gray-900 shadow-lg border border-gray-700 rounded-lg p-6 w-full max-w-lg text-white justify-self-center">
         <h2 className="text-2xl font-bold text-teal-400">
@@ -158,6 +160,7 @@ const PeopleVote = () => {
         )}
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

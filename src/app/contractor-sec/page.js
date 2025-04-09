@@ -4,11 +4,18 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGovUser } from "@/Context/govUser";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function ContractorHomePage() {
+  const router = useRouter();
   const { user } = useGovUser();
   console.log(user);
 
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#0a0f2c] to-[#061e1e] text-white">
       {/* Hero Section */}
@@ -21,8 +28,10 @@ export default function ContractorHomePage() {
         >
           Contractor Dashboard
         </motion.h1>
+
         <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">
-          Manage your tenders, track contracts, and update work—all in one place.
+          Manage your tenders, track contracts, and update work—all in one
+          place.
         </p>
 
         <div className="flex justify-center flex-wrap gap-4 pt-6">
@@ -33,9 +42,20 @@ export default function ContractorHomePage() {
               </button>
             </Link>
           ) : (
-            <div className="bg-white px-4 py-2 text-black rounded-xl flex items-center">
-              welcome, {user.name}
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition" size={18} />
+            <div className="flex gap-5 max-md:flex-col ">
+              <div className="bg-white px-4 py-2 text-black rounded-xl flex items-center">
+                welcome, {user.name}
+                <ArrowRight
+                  className="ml-2 group-hover:translate-x-1 transition"
+                  size={18}
+                />
+              </div>
+              <button
+                className="bg-red-800 justify-center px-4 py-2 text-white rounded-xl flex items-center"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </div>
           )}
         </div>
@@ -56,14 +76,14 @@ export default function ContractorHomePage() {
           <FeatureCard
             title="My Bids"
             desc="Track your bidding history and current bid statuses."
-            href="/contractor/my-bids"
+            href="/contractor-sec/bid-history"
           />
           <FeatureCard
             title="My Contracts"
             desc="Monitor progress and payments for your awarded contracts."
             href="/contractor-sec/my-contracts"
           />
-          <FeatureCard
+          {/* <FeatureCard
             title="Upload Work Progress"
             desc="Submit milestone updates and media proof for verification."
             href="/contractor/upload-progress"
@@ -72,12 +92,12 @@ export default function ContractorHomePage() {
             title="Messages & Alerts"
             desc="View messages from officials and notifications on contracts."
             href="/contractor-sec/messages"
-          />
-          <FeatureCard
+          /> */}
+          {/* <FeatureCard
             title="Contractor Profile"
             desc="Manage your profile, documents, and qualifications."
             href="/contractor/profile"
-          />
+          /> */}
         </div>
       </section>
     </main>
@@ -97,7 +117,10 @@ function FeatureCard({ title, desc, href }) {
       <Link href={href}>
         <span className="text-[#1b2a3d] bg-white hover:bg-orange-300 px-3 py-2 rounded-2xl font-medium inline-flex items-center group transition">
           Go to{" "}
-          <ArrowRight className="ml-2 group-hover:translate-x-1 transition" size={18} />
+          <ArrowRight
+            className="ml-2 group-hover:translate-x-1 transition"
+            size={18}
+          />
         </span>
       </Link>
     </motion.div>

@@ -104,9 +104,12 @@ export default function ContractDesc() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-[#060611] text-white md:p-6 p-3 flex flex-col items-center">
+      <div className="md:text-3xl text-2xl font-bold text-teal-400 mb-4 text-center">
+        Request Payment
+      </div>
       <div className="w-full max-w-2xl bg-[#1a1a1a] shadow-lg rounded-lg p-6 border border-gray-700">
-        <h1 className="text-3xl font-bold text-teal-400 mb-4 text-center">
+        <h1 className="md:text-3xl text-2xl font-bold text-white mb-4 text-center">
           Contract Details
         </h1>
 
@@ -121,7 +124,7 @@ export default function ContractDesc() {
 
         <div className="mt-6">
           <label className="block text-gray-300 font-semibold mb-1">
-            Select Material:
+            Requirement:
           </label>
           <select
             className="w-full p-2 border border-gray-600 bg-black rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -179,35 +182,79 @@ export default function ContractDesc() {
         <h2 className="text-2xl font-bold text-teal-400 mt-8 text-center">
           Pending Payment Approvals
         </h2>
-        {requestedPayments.length > 0 &&
-          requestedPayments.map((payment, index) => (
-            <div
-              key={index}
-              className="bg-[#222] p-4 mt-4 rounded-lg shadow-md border border-gray-700"
-            >
-              <InfoRow label="Bid Amount" value={`₹${payment.bidAmount}`} />
-              <InfoRow
-                label="Requested Amount"
-                value={`₹${payment.paymentMade}`}
-              />
-              <InfoRow
-                label="Remaining Amount"
-                value={`₹${payment.bidAmount - payment.paymentMade}`}
-              />
-              <InfoRow
-                label="Status"
-                value={
-                  payment.status == "Approve" ? (
-                    <span className="text-green-400 font-semibold">
-                      Approved
-                    </span>
-                  ) : (
-                    <span className="text-red-400 font-semibold">Pending</span>
-                  )
-                }
-              />
-            </div>
-          ))}
+        {requestedPayments.filter((payment) => payment.status === "Pending")
+          .length > 0 ?
+          requestedPayments
+            .filter((payment) => payment.status === "Pending")
+            .map((payment, index) => (
+              <div
+                key={index}
+                className="bg-[#222] p-4 mt-4 rounded-lg shadow-md border border-gray-700"
+              >
+                <InfoRow label="Bid Amount" value={`₹${payment.bidAmount}`} />
+                <InfoRow
+                  label="Requested Amount"
+                  value={`₹${payment.paymentMade}`}
+                />
+                <InfoRow
+                  label="Remaining Amount"
+                  value={`₹${payment.bidAmount - payment.paymentMade}`}
+                />
+                <InfoRow
+                  label="Status"
+                  value={
+                    payment.status == "Completed" ? (
+                      <span className="text-green-400 font-semibold">
+                        Completed
+                      </span>
+                    ) : (
+                      <span className="text-red-400 font-semibold">
+                        Pending
+                      </span>
+                    )
+                  }
+                />
+              </div>
+            )):<div className="my-2 justify-self-center">No Pending Payments</div>}
+      </div>
+      <div className="w-full">
+        <h2 className="text-2xl font-bold text-teal-400 mt-8 text-center">
+          Payments History
+        </h2>
+        {requestedPayments.filter((payment) => payment.status === "Completed")
+          .length > 0 ?
+          requestedPayments
+            .filter((payment) => payment.status === "Completed")
+            .map((payment, index) => (
+              <div
+                key={index}
+                className="bg-[#222] p-4 mt-4 rounded-lg shadow-md border border-gray-700"
+              >
+                <InfoRow label="Bid Amount" value={`₹${payment.bidAmount}`} />
+                <InfoRow
+                  label="Requested Amount"
+                  value={`₹${payment.paymentMade}`}
+                />
+                <InfoRow
+                  label="Remaining Amount"
+                  value={`₹${payment.bidAmount - payment.paymentMade}`}
+                />
+                <InfoRow
+                  label="Status"
+                  value={
+                    payment.status == "Completed" ? (
+                      <span className="text-green-400 font-semibold">
+                        Completed
+                      </span>
+                    ) : (
+                      <span className="text-red-400 font-semibold">
+                        Pending
+                      </span>
+                    )
+                  }
+                />
+              </div>
+            )):<div className="my-2 justify-self-center"> No Payments Available</div>}
       </div>
     </div>
   );

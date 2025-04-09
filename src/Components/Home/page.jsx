@@ -5,14 +5,19 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGovUser } from "@/Context/govUser";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
+  const router = useRouter();
+  const { user } = useGovUser();
+  console.log(user);
 
-  const {user}=useGovUser()
-  console.log(user)
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
   return (
     <main className="min-h-screen bg-gray-900/50 text-white">
- 
       <section className="px-6 md:px-20 pt-20 pb-10 text-center space-y-6 bg-linear-to-t from-[#22043e] to-[#04070f]">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
@@ -28,17 +33,31 @@ export default function HomePage() {
         </p>
 
         <div className="flex justify-center flex-wrap gap-4 pt-6">
-          {!user?(
-              <Link href="/login">
-              <button className="bg-white text-black hover:bg-gray-200 font-semibold px-3 py-2 rounded-2xl">
+          {!user ? (
+            <Link href="/login" className="flex gap-3">
+              <button className="bg-white text-black hover:bg-gray-200 font-semibold px-3 py-2 rounded-2xl flex gap-1 items-center">
                 Login
+                <ArrowRight
+                  className="ml-2 group-hover:translate-x-1 transition"
+                  size={18}
+                />
               </button>
             </Link>
-          ):(<div className="bg-white px-3 py-3 text-black rounded-xl flex items-center">Explore  <ArrowRight
-            className="ml-2 group-hover:translate-x-1 transition"
-            size={18}
-          /></div>)}
-        
+          ) : (
+            <div className=" flex gap-3">
+              <button
+                className="bg-white px-3 py-3 text-black rounded-xl  items-center cursor-default flex gap-1"
+                onClick={handleLogout}
+              >
+                Logout{" "}
+                <ArrowRight
+                  className="ml-2 group-hover:translate-x-1 transition"
+                  size={18}
+                />
+              </button>
+            </div>
+          )}
+
           {/* <Link href="/contractor-login">
             <button variant="outline" className="border-white text-white hover:bg-white hover:text-black font-semibold">
               Login as Contractor
