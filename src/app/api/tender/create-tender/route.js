@@ -1,7 +1,5 @@
 import { dbConnect } from "@/lib/dbConnect";
 import Tender from "@/Models/Tender";
-import TenderContract from "@/contracts/TenderCreation.json";
-import { ethers } from "ethers";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -9,7 +7,6 @@ export async function POST(req) {
     return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 
   try {
-    // ✅ Use req.json() to parse the request body
     const body = await req.json();
     console.log("Received Body:", body);
 
@@ -44,7 +41,6 @@ export async function POST(req) {
 
     await dbConnect();
 
-    // Step 1: Store Tender in MongoDB
     const newTender = new Tender({
       title,
       description,
@@ -61,7 +57,10 @@ export async function POST(req) {
 
     const savedTender = await newTender.save();
 
-    // Step 2: Call Smart Contract
+    // -----------------------------
+    // Blockchain logic commented out
+    // -----------------------------
+    /*
     const provider = new ethers.JsonRpcProvider(
       process.env.NEXT_PUBLIC_RPC_URL
     );
@@ -81,27 +80,25 @@ export async function POST(req) {
       body.category,
       ethers.parseEther(body.minBidAmount),
       ethers.parseEther(body.maxBidAmount),
-      Math.floor(new Date(body.bidOpeningDate).getTime() / 1000), // Convert to UNIX timestamp
+      Math.floor(new Date(body.bidOpeningDate).getTime() / 1000),
       Math.floor(new Date(body.bidClosingDate).getTime() / 1000),
       body.issueDetails.placename,
-      String(body.creator._id)
+      String(body.creator.id)
     );
     const receipt = await tx.wait();
-    
-    console.log("Transaction Receipt:", receipt);
+
     savedTender.transactionHash = receipt.transactionHash;
 
-    // Step 3: Extract `tenderId` from Event Logs
     let blockchainTenderId;
     for (const log of receipt.logs) {
       try {
         const parsedLog = contract.interface.parseLog(log);
-        if (parsedLog.name === "TenderCreated") { // ✅ Match the correct event
-          blockchainTenderId = parsedLog.args[0].toString(); // Get tenderId from event
+        if (parsedLog.name === "TenderCreated") {
+          blockchainTenderId = parsedLog.args[0].toString();
           break;
         }
       } catch (error) {
-        continue; // Ignore logs that do not match
+        continue;
       }
     }
 
@@ -109,10 +106,10 @@ export async function POST(req) {
       throw new Error("Tender ID not found in blockchain event logs");
     }
 
-    // Step 4: Update MongoDB with Blockchain Details
     savedTender.blockchainTenderId = blockchainTenderId;
-   
     await savedTender.save();
+    */
+    // -----------------------------
 
     return NextResponse.json(
       { message: "Tender created successfully!", tenderId: savedTender._id },

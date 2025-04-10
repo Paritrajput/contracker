@@ -105,10 +105,35 @@ export const BidAuth = () => {
           Bidding Process Ongoing
         </div>
       ) : tenders.status === "Completed" ? (
-        <div className="my-5  text-teal-500 py-2 text-2xl font-semibold justify-self-center">
-          Bidding Completed
+        <div className="my-5 text-teal-500 py-2 text-2xl font-semibold justify-self-center">
+          <h1 className="justify-self-center">Bidding Completed</h1>
+
+          <h1 className="mt-5 justify-self-center">Winner</h1>
+          
+          <div className="mt-4">
+            {
+              bids.filter(bid => bid.status === "Accepted").length > 0 ? (
+                bids.filter(bid => bid.status === "Accepted").map((bid) => (
+                  <div
+                    key={bid._id}
+                    className="p-4 bg-gray-800 rounded-lg shadow-md border-2 border-teal-500"
+                  >
+                    <h2 className="text-lg font-semibold text-white">{bid.name}</h2>
+                    <h2 className="text-md text-gray-400">{bid.contractorId}</h2>
+                    <p className="text-md text-teal-300">
+                      Bid Amount: ₹{bid.bidAmount}
+                    </p>
+                    <p className="text-sm text-green-400 font-medium">✅ Status: Accepted</p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-gray-400">No accepted bid found.</div>
+              )
+            }
+          </div>
         </div>
       ) : null}
+      
       <h1 className="text-2xl font-bold text-center text-teal-400 mb-6">
         Submitted Bid
       </h1>
