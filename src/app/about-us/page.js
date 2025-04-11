@@ -3,11 +3,11 @@ export default function AboutPage() {
     <div className="min-h-screen bg-[#060611] text-gray-200 px-4 py-10 md:px-20">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-6 text-teal-400">
-          About ConTracker
+          About CivicLedger
         </h1>
 
         <p className="mb-6 text-lg text-gray-300">
-          <strong className="text-white">ConTracker</strong> is a decentralized
+          <strong className="text-white">CivicLedger</strong> is a decentralized
           platform designed to transform how government contracts are handled.
           Using blockchain technology, we bring transparency, accountability,
           and efficiency to public infrastructure projects.

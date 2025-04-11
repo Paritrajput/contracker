@@ -25,7 +25,7 @@ export default function HomePage() {
           transition={{ duration: 0.6 }}
           className="text-4xl md:text-6xl font-bold leading-tight"
         >
-          Welcome to ConTracker
+          Welcome to CivicLedger
         </motion.h1>
         <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
           Revolutionizing public infrastructure through transparency and

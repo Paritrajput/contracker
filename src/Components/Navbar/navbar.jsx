@@ -29,7 +29,7 @@ const Navbar = () => {
           href="/"
           className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500"
         >
-          Contracker
+          CivicLedger
         </Link>
 
         {/* Desktop Links */}
@@ -74,7 +74,7 @@ const Navbar = () => {
             className="fixed top-0 left-0 w-full h-full bg-black text-white z-50 md:hidden"
           >
          
-            <div className="flex p-3 text-2xl font-bold text-teal-400 "><h1>Contracker</h1>
+            <div className="flex p-3 text-2xl font-bold text-teal-400 "><h1>CivicLedger</h1>
             <div className="absolute top-4 right-4">
              
               <X size={28} className="cursor-pointer" onClick={() => setMenuOpen(false)} />

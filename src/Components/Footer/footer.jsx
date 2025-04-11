@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="border-t border-gray-700 pt-6 grid grid-cols-1 gap-8 md:grid-cols-3">
         {/* Brand Info */}
         <div className="space-y-2 max-md:hidden">
-          <h3 className="text-2xl font-bold text-white">ConTracker</h3>
+          <h3 className="text-2xl font-bold text-white">CivicLedger</h3>
           <p className="text-sm text-gray-400 max-w-sm">
             A blockchain-powered public works transparency platform. Track
             tenders, verify milestones, and ensure funds reach the right hands.

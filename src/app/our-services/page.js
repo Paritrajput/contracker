@@ -4,7 +4,7 @@ export default function ServicesPage() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">Our Services</h1>
         <p className="text-lg mb-10 leading-relaxed text-gray-300">
-          At <strong className="text-teal-400">ConTracker</strong>, we offer a suite of services designed to bring transparency,
+          At <strong className="text-teal-400">CivicLedger</strong>, we offer a suite of services designed to bring transparency,
           efficiency, and public involvement into the government contract system.
         </p>
 
