@@ -15,6 +15,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import markerRetina from "leaflet/dist/images/marker-icon-2x.png";
 import ProtectedRoute from "@/Components/ProtectedRoutes/protected-routes";
+import { useGovUser } from "@/Context/govUser";
 
 const PeopleIssue = () => {
   const [issueName, setIssueName] = useState("");
@@ -29,26 +30,34 @@ const PeopleIssue = () => {
   const [dateOfComplaint, setDateOfComplaint] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [userId, setUserId]=useState()
+  const {user}=useGovUser()
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (typeof window === "undefined") return;
+
+  useEffect(()=>{
+setUserId(user.id)
+  },[user])
+
+
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     if (typeof window === "undefined") return;
   
-      const token = localStorage.getItem("public-token");
-      if (token) {
-        try {
-          const res = await axios.get("/api/public-sec/profile", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setPublicId(res.data._id);
-        } catch (err) {
-          localStorage.removeItem("public-token");
-        }
-      }
-    };
+  //     const token = localStorage.getItem("public-token");
+  //     if (token) {
+  //       try {
+  //         const res = await axios.get("/api/public-sec/profile", {
+  //           headers: { Authorization: `Bearer ${token}` },
+  //         });
+  //         setPublicId(res.data._id);
+  //       } catch (err) {
+  //         localStorage.removeItem("public-token");
+  //       }
+  //     }
+  //   };
   
-    fetchProfile();
-  }, []);
+  //   fetchProfile();
+  // }, []);
   
 
   function LocationMarker() {
@@ -116,7 +125,7 @@ const PeopleIssue = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("userId", publicId);
+      formData.append("userId", userId);
       formData.append("issue_type", issueName);
       formData.append("description", description);
       formData.append("approval", 0);

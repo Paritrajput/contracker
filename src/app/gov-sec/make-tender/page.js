@@ -38,12 +38,13 @@ export const MakeTender = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  // const [blockchainTenderId, setBlockchainTenderId] = useState("");
 
   useEffect(() => {
     setCreator(user);
   }, [user]);
 
-  console.log(creator)
+  console.log(creator);
 
   const contractAddress = "0x65287e595750b26423761930F927e084B4175245";
 
@@ -64,8 +65,12 @@ export const MakeTender = () => {
       const signer = await provider.getSigner();
       const contract = new Contract(contractAddress, TenderABI, signer);
 
-      const deadline = Math.floor(new Date(formData.bidClosingDate).getTime() / 1000);
-      const starting = Math.floor(new Date(formData.bidOpeningDate).getTime() / 1000);
+      const deadline = Math.floor(
+        new Date(formData.bidClosingDate).getTime() / 1000
+      );
+      const starting = Math.floor(
+        new Date(formData.bidOpeningDate).getTime() / 1000
+      );
 
       const tx = await contract.createTender(
         formData.title,
@@ -81,6 +86,33 @@ export const MakeTender = () => {
 
       await tx.wait();
       console.log("✅ Tender successfully created on Blockchain");
+
+      // const receipt = await tx.wait();
+      // console.log(receipt)
+
+      // // const transactionHash = receipt.transactionHash;
+      // let tempTenderId = "";
+
+      // for (const log of receipt.logs) {
+      //   try {
+      //     const parsedLog = contract.interface.parseLog(log);
+      //     if (parsedLog.name === "TenderCreated") {
+      //       tempTenderId = parsedLog.args[0].toString();
+      //       break;
+      //     }
+      //   } catch (error) {
+      //     continue;
+      //   }
+      // }
+      
+      // if (!tempTenderId) {
+      //   throw new Error("Tender ID not found in blockchain event logs");
+      // }
+
+      // console.log(tempTenderId)
+      
+      // setBlockchainTenderId(tempTenderId);
+      
 
       // Store in MongoDB
       const mongoResponse = await fetch("/api/tender/create-tender", {
@@ -110,7 +142,7 @@ export const MakeTender = () => {
         location: "",
       });
 
-      alert("tender created successfully")
+      alert("tender created successfully");
     } catch (err) {
       console.error("❌ Error submitting tender:", err);
       setError(err.message);
@@ -163,12 +195,18 @@ export const MakeTender = () => {
 
       {/* Tender Form */}
       <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-lg mt-6">
-        <h2 className="text-2xl font-bold text-teal-400">Enter Tender Details</h2>
+        <h2 className="text-2xl font-bold text-teal-400">
+          Enter Tender Details
+        </h2>
 
         <div className="grid gap-4">
           {[
             { label: "Tender Title", name: "title", type: "text" },
-            { label: "Tender Description", name: "description", type: "textarea" },
+            {
+              label: "Tender Description",
+              name: "description",
+              type: "textarea",
+            },
             { label: "Category", name: "category", type: "text" },
             { label: "Min Bid Amount", name: "minBidAmount", type: "number" },
             { label: "Max Bid Amount", name: "maxBidAmount", type: "number" },
@@ -177,7 +215,9 @@ export const MakeTender = () => {
             { label: "Work Location", name: "location", type: "text" },
           ].map(({ label, name, type }) => (
             <div className="mt-2" key={name}>
-              <label className="block font-semibold text-gray-300">{label}</label>
+              <label className="block font-semibold text-gray-300">
+                {label}
+              </label>
               {type === "textarea" ? (
                 <textarea
                   name={name}

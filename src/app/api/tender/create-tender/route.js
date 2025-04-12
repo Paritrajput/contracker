@@ -1,6 +1,8 @@
 import { dbConnect } from "@/lib/dbConnect";
 import Tender from "@/Models/Tender";
+import { ethers } from "ethers";
 import { NextResponse } from "next/server";
+import TenderContract from "@/contracts/TenderCreation";
 
 export async function POST(req) {
   if (req.method !== "POST")
@@ -38,7 +40,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-
+    // console.log(blockchainTenderId);
     await dbConnect();
 
     const newTender = new Tender({
@@ -57,10 +59,6 @@ export async function POST(req) {
 
     const savedTender = await newTender.save();
 
-    // -----------------------------
-    // Blockchain logic commented out
-    // -----------------------------
-    /*
     const provider = new ethers.JsonRpcProvider(
       process.env.NEXT_PUBLIC_RPC_URL
     );
@@ -108,8 +106,6 @@ export async function POST(req) {
 
     savedTender.blockchainTenderId = blockchainTenderId;
     await savedTender.save();
-    */
-    // -----------------------------
 
     return NextResponse.json(
       { message: "Tender created successfully!", tenderId: savedTender._id },

@@ -61,34 +61,34 @@ export async function POST(req) {
     );
     console.log(experienceYears);
 
-    const tx = await contract.placeBid(
-      Number(blockchainTenderId),
-      contractorId,
-      Number(bidAmount),
-      proposalDocument,
-      Math.floor(Number(experienceYears)),
-      Math.floor(Number(contractorRating))
-    );
-    const receipt = await tx.wait();
+    // const tx = await contract.placeBid(
+    //   Number(blockchainTenderId),
+    //   contractorId,
+    //   Number(bidAmount),
+    //   proposalDocument,
+    //   Math.floor(Number(experienceYears)),
+    //   Math.floor(Number(contractorRating))
+    // );
+    // const receipt = await tx.wait();
 
-    console.log("Transaction Receipt:", receipt);
+    // console.log("Transaction Receipt:", receipt);
 
-    let blockchainBidId;
-    for (const log of receipt.logs) {
-      try {
-        const parsedLog = contract.interface.parseLog(log);
-        if (parsedLog.name === "BidPlaced") {
-          blockchainBidId = parsedLog.args[0].toString(); // Get bidId instead of tenderId
-          break;
-        }
-      } catch (error) {
-        continue;
-      }
-    }
+    // let blockchainBidId;
+    // for (const log of receipt.logs) {
+    //   try {
+    //     const parsedLog = contract.interface.parseLog(log);
+    //     if (parsedLog.name === "BidPlaced") {
+    //       blockchainBidId = parsedLog.args[0].toString(); // Get bidId instead of tenderId
+    //       break;
+    //     }
+    //   } catch (error) {
+    //     continue;
+    //   }
+    // }
 
-    if (!blockchainBidId) {
-      throw new Error("Tender ID not found in blockchain event logs");
-    }
+    // if (!blockchainBidId) {
+    //   throw new Error("Tender ID not found in blockchain event logs");
+    // }
 
     const newBid = new Bid({
       tenderId,
@@ -98,14 +98,14 @@ export async function POST(req) {
       proposalDocument,
       experienceYears,
       contractorRating,
-      blockchainBidId,
-      transactionHash: tx.hash,
+      // blockchainBidId,
+      // transactionHash: tx.hash,
     });
 
     await newBid.save();
 
     return NextResponse.json(
-      { success: true, message: "Bid placed successfully", txHash: tx.hash },
+      { success: true, message: "Bid placed successfully", },
       { status: 200 }
     );
   } catch (error) {
