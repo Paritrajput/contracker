@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
-
-import Contract from "@/Models/Contract";
-
 import Payment from "@/Models/Payment";
+import cloudinary from "cloudinary";
+import Contract from "@/Models/Contract";
+import Tender from "@/Models/Tender";
+
+cloudinary.v2.config({
+  cloud_name: "dt1cqoxe8",
+  api_key: "736378735539485",
+  api_secret: "iJfGZ2TqF348thygERO5RzVgjpM",
+});
 
 export async function PUT(req) {
   try {
@@ -14,10 +20,9 @@ export async function PUT(req) {
     const vote = formData.get("vote");
     const review = formData.get("review");
     const image = formData.get("image");
-
+    const contractId = formData.get("contractId");
 
     const payment = await Payment.findById(paymentId);
-    console.log(payment);
     if (!payment) {
       return NextResponse.json(
         { message: "Payment not found" },
@@ -25,11 +30,49 @@ export async function PUT(req) {
       );
     }
 
+    const contract = await Contract.findById(contractId);
+    if (!contract) {
+      return NextResponse.json(
+        { success: false, message: "Contract not found" },
+        { status: 404 }
+      );
+    }
+
+    const tender = await Tender.findById(contract.tenderId);
+    if (!tender) {
+      return NextResponse.json(
+        { success: false, message: "Tender not found" },
+        { status: 404 }
+      );
+    }
+
+    // Sanitize folder name
+    let contractTitle = tender.title || "untitled";
+    contractTitle = contractTitle
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-zA-Z0-9_]/g, "");
+
     const voteObject = {
       description: review,
-      // image: review.image,
     };
 
+    // Upload image to Cloudinary if exists
+    if (image && typeof image.arrayBuffer === "function") {
+      const buffer = await image.arrayBuffer();
+      const base64Image = Buffer.from(buffer).toString("base64");
+      const dataUri = `data:${image.type};base64,${base64Image}`;
+
+      const uploadedResponse = await cloudinary.v2.uploader.upload(dataUri, {
+        folder: `civicLedger/${contractTitle}/publicImgs`,
+        use_filename: true,
+        unique_filename: false,
+      });
+
+      voteObject.image = uploadedResponse.secure_url;
+    }
+
+    // Push vote into appropriate array
     if (vote === "approve") {
       payment.approvalVotes.push(voteObject);
     } else if (vote === "reject") {
@@ -49,50 +92,6 @@ export async function PUT(req) {
     );
   } catch (error) {
     console.error("Error in PUT voting route:", error);
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(req) {
-  try {
-    await dbConnect();
-
-    const data = await req.json();
-
-    const { contractId, index } = data;
-    // console.log(contractId,index);
-    const contract = await Payment.findById(contractId);
-
-    if (!contract) {
-      return NextResponse.json(
-        { message: "payment not found" },
-        { status: 404 }
-      );
-    }
-    // console.log(contract);
-
-    //  const approveVotes=contract.milestones[index].approvalVotes
-    //  const rejectVotes=contract.milestones[index].rejectionVotes
-    //     if ((approveVotes/(approveVotes+rejectVotes))>=0.66) {
-
-    //       contract.milestones[index].status ="Voted";
-    //     }
-    //     else{
-    //       contract.milestones[index].status ="Rejected";
-    //     }
-
-    const res = await contract.save();
-    // console.log("res:",res)
-
-    return NextResponse.json(
-      { message: "Vote updated", contract },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error updating issue:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 }

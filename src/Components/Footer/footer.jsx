@@ -106,12 +106,12 @@ export default function Footer() {
       </div>
 
       {/* Bottom Credit Line */}
-      <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-500">
+      {/* <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-500">
         <p>
           Made with ❤️ by{" "}
           <span className="text-teal-400 font-semibold">Team Vibhav</span>
         </p>
-      </div>
+      </div> */}
     </footer>
   );
 }

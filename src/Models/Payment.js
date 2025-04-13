@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const VoteSchema = new mongoose.Schema({
   description: String,
   image: String,
- 
 });
 
 const paymentSchema = new mongoose.Schema(
@@ -16,6 +15,7 @@ const paymentSchema = new mongoose.Schema(
     amountUsed: Number,
     reason: String,
     paymentMade: Number,
+    contractorImageUrl: String,
 
     status: {
       type: String,

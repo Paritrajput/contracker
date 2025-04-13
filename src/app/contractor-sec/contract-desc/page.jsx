@@ -25,49 +25,44 @@ export default function ContractDesc() {
     progress: "",
   });
 
+  const [imageFile, setImageFile] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (paymentMade > contractData.bidAmount - contractData.paidAmound) {
-      alert("YOur Requested Amount Is More Than Limit ");
+      alert("Your requested amount exceeds the available limit.");
       return;
     }
 
-    const updatedPayment = {
-      contractorId: contractData.contractorMongoId,
-      contractorWallet: contractData.contractor,
-      contractId: contractData.mongoContractId,
-      bidAmount: contractData.contractAmount,
-      reason: otherText ? otherText : selectedOption,
-      progress: progress,
-      paymentMade: paymentMade,
-      status: "Pending",
-    };
+    const formData = new FormData();
+    formData.append("contractorId", contractData.contractorMongoId);
+    formData.append("contractorWallet", contractData.contractor);
+    formData.append("contractId", contractData.mongoContractId);
+    formData.append("bidAmount", contractData.contractAmount);
+    formData.append("reason", otherText || selectedOption);
+    formData.append("progress", progress);
+    formData.append("paymentMade", paymentMade);
+    formData.append("status", "Pending");
 
-    setPendingPayment(updatedPayment);
+    // if (imageFile) {
+    formData.append("workImage", imageFile);
+    // }
 
     try {
       const response = await fetch("/api/payment/create-payment", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedPayment), // Use updatedPayment instead of pendingPayment
+        body: formData,
       });
 
       const data = await response.json();
       if (data.success) {
         alert("Payment details saved!");
-        setPendingPayment({
-          contractorId: "",
-          contractId: "",
-          bidAmount: "",
-          amountUsed: "",
-          reason: "",
-          progress: "",
-          paymentMade: "",
-          status: "",
-        });
+        setPaymentMade("");
+        setSelectedOption("");
+        setOtherText("");
+        setProgress("");
+        setImageFile(null);
         getPayments();
       } else {
         alert("Error: " + data.message);
@@ -112,7 +107,6 @@ export default function ContractDesc() {
         <h1 className="md:text-3xl text-2xl font-bold text-white mb-4 text-center">
           Contract Details
         </h1>
-
         <div className="space-y-4">
           <InfoRow label="Contract Title" value={contractData.projectTitle} />
           <InfoRow label="Reference ID" value={contractData.contractId} />
@@ -121,7 +115,6 @@ export default function ContractDesc() {
             value={`₹${contractData.contractAmount}`}
           />
         </div>
-
         <div className="mt-6">
           <label className="block text-gray-300 font-semibold mb-1">
             Requirement:
@@ -162,6 +155,17 @@ export default function ContractDesc() {
 
         <div className="mt-6">
           <label className="block text-gray-300 font-semibold mb-1">
+            Upload Work Image:
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files[0])}
+            className="w-full p-2 bg-black border border-gray-600 rounded-md text-white"
+          />
+        </div>
+        <div className="mt-6">
+          <label className="block text-gray-300 font-semibold mb-1">
             Payment Required:
           </label>
           <input
@@ -171,19 +175,17 @@ export default function ContractDesc() {
             className="w-full p-2 border border-gray-600 bg-black rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
-
         <button
           onClick={handleSubmit}
           className="w-full bg-teal-500 text-black font-semibold p-3 mt-4 rounded-lg hover:bg-teal-400 transition duration-200"
         >
           Submit Payment
         </button>
-
         <h2 className="text-2xl font-bold text-teal-400 mt-8 text-center">
           Pending Payment Approvals
         </h2>
         {requestedPayments.filter((payment) => payment.status === "Pending")
-          .length > 0 ?
+          .length > 0 ? (
           requestedPayments
             .filter((payment) => payment.status === "Pending")
             .map((payment, index) => (
@@ -215,14 +217,17 @@ export default function ContractDesc() {
                   }
                 />
               </div>
-            )):<div className="my-2 justify-self-center">No Pending Payments</div>}
+            ))
+        ) : (
+          <div className="my-2 justify-self-center">No Pending Payments</div>
+        )}
       </div>
       <div className="w-full">
         <h2 className="text-2xl font-bold text-teal-400 mt-8 text-center">
           Payments History
         </h2>
         {requestedPayments.filter((payment) => payment.status === "Completed")
-          .length > 0 ?
+          .length > 0 ? (
           requestedPayments
             .filter((payment) => payment.status === "Completed")
             .map((payment, index) => (
@@ -254,7 +259,10 @@ export default function ContractDesc() {
                   }
                 />
               </div>
-            )):<div className="my-2 justify-self-center"> No Payments Available</div>}
+            ))
+        ) : (
+          <div className="my-2 justify-self-center"> No Payments Available</div>
+        )}
       </div>
     </div>
   );
